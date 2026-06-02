@@ -33,6 +33,44 @@
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- JSONBin — permanent shared review storage -->
+<script>
+  // ─────────────────────────────────────────────────────────────────
+  // JSONBin.io setup
+  // HOW TO GET YOUR FREE KEY (2 minutes):
+  //  1. Go to https://jsonbin.io  →  Sign Up (free)
+  //  2. Dashboard → API Keys → Create API Key  →  copy it below
+  //  3. Click "Create Bin" → paste  []  as content → Save
+  //  4. Copy the Bin ID from the URL and paste it below
+  // ─────────────────────────────────────────────────────────────────
+  window.JBIN_KEY = '$2a$10$.nGW.vIpNwVUaY9fhTBnyOQXlgfZIBWw2dYrq3FT3a5qbRaJ2dmSa';
+  window.JBIN_ID  = '6a1e9e2dda38895dfe7aae6e';
+  // ─────────────────────────────────────────────────────────────────
+
+  window.jbLoad = async function() {
+    try {
+      const res = await fetch('https://api.jsonbin.io/v3/b/' + window.JBIN_ID + '/latest', {
+        headers: { 'X-Master-Key': window.JBIN_KEY, 'X-Bin-Meta': 'false' }
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data.reviews) ? data.reviews : [];
+    } catch(e) { return []; }
+  };
+
+  window.jbSave = async function(reviews) {
+    try {
+      await fetch('https://api.jsonbin.io/v3/b/' + window.JBIN_ID, {
+        method:  'PUT',
+        headers: {
+          'Content-Type':  'application/json',
+          'X-Master-Key':  window.JBIN_KEY
+        },
+        body: JSON.stringify({ reviews: reviews })
+      });
+    } catch(e) { console.error('Review save failed', e); }
+  };
+</script>
 <style>
   * { scroll-behavior: smooth; box-sizing: border-box; }
   body { font-family: 'Inter', system-ui, sans-serif; background: #030712; color: #fff; margin: 0; overflow-x: hidden; }
@@ -454,6 +492,13 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scoreAnim, setScoreAnim] = useState(0);
   const [reviews, setReviews] = useState([]);
+
+  // Load reviews from JSONBin on mount
+  useEffect(() => {
+    window.jbLoad().then(data => {
+      if (data.length) setReviews(data);
+    });
+  }, []);
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 0, text: '' });
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -523,9 +568,12 @@ function App() {
       date: new Date().toLocaleDateString(),
       id: Date.now()
     };
-    setReviews([newReview, ...reviews]);
+    const updated = [newReview, ...reviews];
+    setReviews(updated);
+    window.jbSave(updated)
+      .then(() => showToast('Review submitted successfully!', 'success'))
+      .catch(() => showToast('Saved locally, sync failed.', 'warning'));
     setReviewForm({ name: '', rating: 0, text: '' });
-    showToast('Review submitted successfully!', 'success');
   };
 
   return (
