@@ -1,0 +1,1891 @@
+<!-- Created by Sudharsun -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ResumeIQ AI – Land More Interviews with AI-Powered Resume Analysis</title>
+<meta name="description" content="Upload your resume and receive an instant ATS score, missing keyword analysis, skill extraction, and actionable improvements powered by AI." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        animation: {
+          'gradient': 'gradient 8s ease infinite',
+          'float': 'float 6s ease-in-out infinite',
+          'float2': 'float 6s ease-in-out 2s infinite',
+          'float4': 'float 6s ease-in-out 4s infinite',
+        },
+        keyframes: {
+          gradient: { '0%,100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
+          float: { '0%,100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-20px)' } },
+        }
+      }
+    }
+  }
+</script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  * { scroll-behavior: smooth; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #030712; color: #fff; margin: 0; overflow-x: hidden; }
+  .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); }
+  .glass-card { background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.10); border-radius: 1rem; }
+  .gradient-text { background: linear-gradient(to right, #c084fc, #f472b6, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .neon-glow { box-shadow: 0 0 24px rgba(139,92,246,0.25); transition: box-shadow 0.3s; }
+  .neon-glow:hover { box-shadow: 0 0 48px rgba(139,92,246,0.5); }
+  .animate-gradient-bg { background-size: 200% 200%; animation: gradient 8s ease infinite; }
+  @keyframes gradient { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+  .blob { position: absolute; border-radius: 9999px; filter: blur(80px); animation: float 6s ease-in-out infinite; pointer-events: none; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #030712; }
+  ::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.4); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(139,92,246,0.7); }
+  .tag-purple { background: rgba(168,85,247,0.2); color: #d8b4fe; border-radius: 9999px; padding: 2px 10px; font-size: 0.75rem; }
+  .tag-blue   { background: rgba(59,130,246,0.2); color: #93c5fd; border-radius: 9999px; padding: 2px 10px; font-size: 0.75rem; }
+  .tag-red    { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); border-radius: 9999px; padding: 2px 10px; font-size: 0.75rem; }
+  .tag-green  { background: rgba(74,222,128,0.15); color: #86efac; border-radius: 9999px; padding: 2px 10px; font-size: 0.75rem; }
+  .btn-primary { background: linear-gradient(to right,#8b5cf6,#3b82f6); border-radius: 9999px; padding: 12px 32px; font-weight: 600; font-size: 1rem; color: #fff; border: none; cursor: pointer; transition: box-shadow 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover { box-shadow: 0 8px 32px rgba(139,92,246,0.45); transform: translateY(-1px); }
+  .btn-glass { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 9999px; padding: 12px 32px; font-weight: 600; font-size: 1rem; color: #fff; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-glass:hover { background: rgba(255,255,255,0.13); }
+  .progress-bar-inner { height: 100%; border-radius: 9999px; transition: width 1.2s ease; }
+
+  /* ── Smooth scroll ── */
+  html { scroll-behavior: smooth; }
+
+  /* ── Interactive cursor glow ── */
+  .cursor-glow {
+    pointer-events: none; position: fixed; width: 400px; height: 400px;
+    border-radius: 50%; z-index: 1;
+    background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s;
+  }
+
+  /* ── Hover tilt cards ── */
+  .tilt-card { transition: transform 0.2s ease, box-shadow 0.2s ease; transform-style: preserve-3d; }
+
+  /* ── Scroll-reveal fade-in ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Floating particles canvas ── */
+  #particles-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+
+  /* ── Glowing nav link underline ── */
+  .nav-link-hover { position: relative; }
+  .nav-link-hover::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: linear-gradient(to right, #8b5cf6, #3b82f6);
+    border-radius: 2px; transition: width 0.3s ease;
+  }
+  .nav-link-hover:hover::after { width: 100%; }
+
+  /* ── Magnetic button pulse ring ── */
+  @keyframes ping { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(1.8);opacity:0} }
+  .btn-ping { position: relative; overflow: visible; }
+  .btn-ping::before {
+    content: ''; position: absolute; inset: 0; border-radius: 9999px;
+    background: rgba(139,92,246,0.35);
+    animation: ping 2s ease-out infinite;
+    pointer-events: none;
+  }
+
+  /* ── Skill tag pop hover ── */
+  .tag-purple, .tag-blue, .tag-red, .tag-green {
+    display: inline-block;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: default;
+  }
+  .tag-purple:hover { transform: scale(1.15); box-shadow: 0 0 10px rgba(168,85,247,0.5); }
+  .tag-blue:hover   { transform: scale(1.15); box-shadow: 0 0 10px rgba(59,130,246,0.5); }
+  .tag-red:hover    { transform: scale(1.15); box-shadow: 0 0 10px rgba(239,68,68,0.5); }
+  .tag-green:hover  { transform: scale(1.15); box-shadow: 0 0 10px rgba(74,222,128,0.5); }
+
+  /* ── Glass card shimmer on hover ── */
+  .glass-card {
+    position: relative; overflow: hidden;
+  }
+  .glass-card::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+    transition: left 0.5s ease; pointer-events: none; z-index: 1;
+  }
+  .glass-card:hover::before { left: 140%; }
+
+  /* ── Step number bounce on hover ── */
+  .step-icon:hover { animation: bounce 0.5s ease; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-10px)} 70%{transform:translateY(-5px)} }
+
+  /* ── FAQ hover glow ── */
+  .faq-item:hover { border-color: rgba(139,92,246,0.4) !important; box-shadow: 0 0 20px rgba(139,92,246,0.12); }
+  .star-btn { background: none; border: none; cursor: pointer; padding: 2px; font-size: 1.4rem; transition: transform 0.1s; }
+  .star-btn:hover { transform: scale(1.15); }
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+<div class="cursor-glow" id="cursor-glow"></div>
+<div id="root"></div>
+
+<!-- Interactive effects: particles + cursor glow + scroll reveal -->
+<script>
+// ── Floating particles ──────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rand(a, b) { return Math.random() * (b - a) + a; }
+
+  const COLORS = ['rgba(139,92,246,VAL)','rgba(59,130,246,VAL)','rgba(236,72,153,VAL)','rgba(34,211,238,VAL)'];
+
+  for (let i = 0; i < 55; i++) {
+    particles.push({
+      x: rand(0, window.innerWidth),
+      y: rand(0, window.innerHeight),
+      r: rand(1, 2.8),
+      dx: rand(-0.25, 0.25),
+      dy: rand(-0.35, -0.08),
+      alpha: rand(0.15, 0.55),
+      color: COLORS[Math.floor(rand(0, COLORS.length))],
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.dx; p.y += p.dy;
+      if (p.y < -5) { p.y = H + 5; p.x = rand(0, W); }
+      if (p.x < -5) p.x = W + 5;
+      if (p.x > W + 5) p.x = -5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color.replace('VAL', p.alpha);
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Cursor glow ─────────────────────────────────────────────────
+(function() {
+  const glow = document.getElementById('cursor-glow');
+  let mx = -999, my = -999;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    glow.style.left = mx + 'px';
+    glow.style.top  = my + 'px';
+    glow.style.opacity = '1';
+  });
+  document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
+})();
+
+// ── Scroll reveal ────────────────────────────────────────────────
+(function() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  function observe() {
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  }
+  observe();
+  // re-run after React renders
+  setTimeout(observe, 800);
+  setTimeout(observe, 2000);
+})();
+
+// ── Tilt effect on glass-cards ───────────────────────────────────
+document.addEventListener('mousemove', function(e) {
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top  + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width  / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 1.4) {
+      card.style.transform = `perspective(600px) rotateY(${dx*6}deg) rotateX(${-dy*6}deg) scale(1.02)`;
+    }
+  });
+});
+document.addEventListener('mouseleave', function() {
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg) scale(1)';
+  });
+});
+</script>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── PDF.js setup ──────────────────────────────────────────────────
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+async function extractTextFromPDF(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    fullText += content.items.map(x => x.str).join(' ') + '\n';
+  }
+  return fullText;
+}
+
+function analyzeResume(text) {
+  const t = text.toLowerCase();
+  const techList = ['javascript','python','react','node.js','java','sql','aws','docker',
+    'kubernetes','typescript','angular','vue','mongodb','postgresql','git','ci/cd','agile',
+    'scrum','rest api','graphql','html','css','tailwind','redux','express','c++','c#',
+    '.net','php','ruby','go','rust','swift','kotlin','flutter','dart','scala','r',
+    'tableau','power bi','excel','sap','salesforce'];
+  const softList = ['leadership','communication','teamwork','problem-solving','analytical',
+    'creative','adaptability','time management','collaboration','critical thinking',
+    'organization','presentation','negotiation','mentoring','project management'];
+  const technicalSkills = techList.filter(s => t.includes(s));
+  const softSkills = softList.filter(s => t.includes(s));
+  const atsScore = Math.min(95, Math.max(40, 50 + technicalSkills.length * 3 + softSkills.length * 2));
+  const missingKeywords = techList.filter(s => !t.includes(s)).slice(0, 8);
+  const suggestions = [];
+  if (!t.includes('summary') && !t.includes('objective'))
+    suggestions.push('Add a professional summary or objective at the top');
+  if (!t.includes('experience'))
+    suggestions.push('Ensure your work experience section is clearly labeled');
+  if (technicalSkills.length < 5)
+    suggestions.push('Add more technical skills relevant to your target role');
+  if (!/\d+[%$]/.test(text))
+    suggestions.push('Add quantifiable metrics (e.g. "increased revenue by 20%")');
+  if (suggestions.length === 0)
+    suggestions.push('Your resume looks great! Consider tailoring it further for each job.');
+  return { atsScore, technicalSkills, softSkills, missingKeywords, suggestions };
+}
+
+// ── Inline SVG Icons ──────────────────────────────────────────────
+const Icon = {
+  Brain: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.44-4.24Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.44-4.24Z"/></svg>,
+  Upload: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
+  Shield: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  Search: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Sparkles: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>,
+  Check: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><polyline points="20 6 9 17 4 12"/></svg>,
+  CheckCircle: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+  AlertCircle: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+  Star: () => <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1" className="icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  StarOutline: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Menu: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  X: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  ChevronDown: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><polyline points="6 9 12 15 18 9"/></svg>,
+  ArrowRight: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+  Play: () => <svg viewBox="0 0 24 24" fill="currentColor" className="icon"><polygon points="5 3 19 12 5 21 5 3"/></svg>,
+  File: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>,
+  RefreshCw: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>,
+  BarChart: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+  Award: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>,
+  Cpu: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>,
+  Globe: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+  Zap: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  Target: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+  MessageCircle: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+};
+
+function Ic({ name, size = 18, color, className = '' }) {
+  const C = Icon[name];
+  if (!C) return null;
+  return (
+    <span style={{ display:'inline-flex', width: size, height: size, color: color || 'currentColor', flexShrink: 0 }} className={className}>
+      <C />
+    </span>
+  );
+}
+
+// ── Score Ring ────────────────────────────────────────────────────
+function ScoreRing({ score, size = 120 }) {
+  const r = (size - 16) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (score / 100) * circ;
+  const color = score >= 75 ? '#4ade80' : score >= 50 ? '#facc15' : '#f87171';
+  const [dash, setDash] = useState(circ);
+  useEffect(() => {
+    const t = setTimeout(() => setDash(offset), 100);
+    return () => clearTimeout(t);
+  }, [offset]);
+  return (
+    <div style={{ position:'relative', width: size, height: size, display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <svg width={size} height={size} style={{ transform:'rotate(-90deg)' }}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8"/>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth="8"
+          strokeLinecap="round" strokeDasharray={circ}
+          style={{ strokeDashoffset: dash, transition: 'stroke-dashoffset 1.4s ease' }}/>
+      </svg>
+      <div style={{ position:'absolute', inset:0, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center' }}>
+        <span style={{ fontSize: size > 110 ? '1.75rem' : '1.25rem', fontWeight:700, color, lineHeight:1 }}>{score}%</span>
+        <span style={{ fontSize:'0.7rem', color:'#9ca3af', marginTop:2 }}>ATS Score</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Toast ─────────────────────────────────────────────────────────
+function Toast({ message, type = 'success', onClose }) {
+  const colors = { success:'#4ade80', error:'#f87171', warning:'#facc15' };
+  const bgs    = { success:'rgba(74,222,128,0.15)', error:'rgba(248,113,113,0.15)', warning:'rgba(250,204,21,0.15)' };
+  useEffect(() => { const t = setTimeout(onClose, 4000); return () => clearTimeout(t); }, []);
+  return (
+    <div style={{ position:'fixed', top:80, right:16, zIndex:9999, minWidth:300 }}>
+      <div className="glass-card" style={{ padding:'14px 16px', display:'flex', alignItems:'center', gap:12 }}>
+        <div style={{ width:32, height:32, borderRadius:8, background:bgs[type], display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <Ic name={type==='success'?'CheckCircle':'AlertCircle'} size={18} color={colors[type]} />
+        </div>
+        <p style={{ flex:1, fontSize:'0.875rem', color:'#e5e7eb' }}>{message}</p>
+        <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', color:'#9ca3af', padding:4 }}>
+          <Ic name="X" size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Loading Screen ────────────────────────────────────────────────
+function LoadingScreen() {
+  return (
+    <div style={{ position:'fixed', inset:0, zIndex:9998, background:'rgba(3,7,18,0.9)', backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ textAlign:'center' }}>
+        <div style={{ fontSize:'5rem', marginBottom:16, animation:'float 1.5s ease-in-out infinite' }}>🧠</div>
+        <div style={{ display:'inline-block', width:56, height:56, position:'relative' }}>
+          <div style={{ position:'absolute', inset:0, border:'4px solid rgba(139,92,246,0.3)', borderTopColor:'#8b5cf6', borderRadius:'50%', animation:'spin 1.2s linear infinite' }}/>
+          <div style={{ position:'absolute', inset:8, border:'4px solid rgba(59,130,246,0.3)', borderTopColor:'#3b82f6', borderRadius:'50%', animation:'spin 0.8s linear infinite reverse' }}/>
+        </div>
+        <p style={{ marginTop:20, fontSize:'1.1rem', color:'#d1d5db' }}>Analyzing your resume…</p>
+        <p style={{ marginTop:6, fontSize:'0.8rem', color:'#6b7280' }}>Powered by AI</p>
+      </div>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
+}
+
+// ── FAQ Item ──────────────────────────────────────────────────────
+function FAQItem({ question, answer }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="glass-card" style={{ overflow:'hidden', marginBottom:12 }}>
+      <button onClick={() => setOpen(!open)}
+        style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 24px', background:'none', border:'none', cursor:'pointer', color:'#fff', textAlign:'left', gap:16 }}>
+        <span style={{ fontWeight:600, fontSize:'0.95rem' }}>{question}</span>
+        <span style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition:'transform 0.25s', flexShrink:0, color:'#a78bfa' }}>
+          <Ic name="ChevronDown" size={20} />
+        </span>
+      </button>
+      <div style={{ maxHeight: open ? '500px' : '0', overflow:'hidden', transition:'max-height 0.3s ease' }}>
+        <p style={{ padding:'0 24px 20px', fontSize:'0.875rem', color:'#9ca3af', lineHeight:1.7 }}>{answer}</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Upload Box ────────────────────────────────────────────────────
+function UploadBox({ onUpload }) {
+  const [dragging, setDragging] = useState(false);
+  const [file, setFile] = useState(null);
+  const inputRef = useRef();
+  const handleFile = (f) => {
+    if (!f) return;
+    if (f.type !== 'application/pdf') { alert('Please upload a PDF file.'); return; }
+    setFile(f);
+    onUpload(f);
+  };
+  if (file) return (
+    <div className="glass-card" style={{ padding:24, display:'flex', alignItems:'center', gap:16, maxWidth:600, margin:'0 auto' }}>
+      <div style={{ width:48, height:48, borderRadius:10, background:'rgba(139,92,246,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        <Ic name="File" size={24} color="#a78bfa" />
+      </div>
+      <div style={{ flex:1 }}>
+        <p style={{ fontWeight:600, marginBottom:2 }}>{file.name}</p>
+        <p style={{ fontSize:'0.8rem', color:'#9ca3af' }}>{(file.size/1024).toFixed(1)} KB · PDF</p>
+      </div>
+      <button onClick={() => setFile(null)} style={{ background:'none', border:'none', cursor:'pointer', color:'#9ca3af', padding:8 }}><Ic name="X" size={18}/></button>
+    </div>
+  );
+  return (
+    <div onDragOver={e=>{e.preventDefault();setDragging(true)}}
+         onDragLeave={()=>setDragging(false)}
+         onDrop={e=>{e.preventDefault();setDragging(false);handleFile(e.dataTransfer.files[0])}}
+         onClick={() => inputRef.current.click()}
+         style={{ border:`2px dashed ${dragging?'#8b5cf6':'rgba(255,255,255,0.2)'}`, borderRadius:16,
+           padding:'48px 24px', textAlign:'center', cursor:'pointer',
+           background: dragging?'rgba(139,92,246,0.08)':'rgba(255,255,255,0.03)',
+           transition:'all 0.2s', maxWidth:600, margin:'0 auto' }}>
+      <input ref={inputRef} type="file" accept=".pdf" style={{ display:'none' }} onChange={e=>handleFile(e.target.files[0])} />
+      <div style={{ width:72, height:72, borderRadius:'50%', background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.2))', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
+        <Ic name="Upload" size={32} color="#a78bfa" />
+      </div>
+      <p style={{ fontSize:'1.1rem', fontWeight:600, marginBottom:8 }}>
+        {dragging ? 'Drop your resume here' : 'Drag & drop your resume'}
+      </p>
+      <p style={{ color:'#9ca3af', marginBottom:8 }}>or click to browse</p>
+      <p style={{ fontSize:'0.8rem', color:'#6b7280' }}>PDF files only</p>
+    </div>
+  );
+}
+
+// ── Main App ──────────────────────────────────────────────────────
+function App() {
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [result, setResult] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scoreAnim, setScoreAnim] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [reviewForm, setReviewForm] = useState({ name: '', rating: 0, text: '' });
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const showToast = (msg, type='success') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 4500);
+  };
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior:'smooth' });
+    setMobileOpen(false);
+  };
+
+  const handleUpload = async (file) => {
+    setLoading(true);
+    setResult(null);
+    try {
+      const text = await extractTextFromPDF(file);
+      const analysis = analyzeResume(text);
+      setResult(analysis);
+      showToast('Resume analyzed successfully!', 'success');
+      setTimeout(() => scrollTo('dashboard'), 400);
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to read PDF. Please try another file.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (result) {
+      setScoreAnim(0);
+      const t = setTimeout(() => setScoreAnim(result.atsScore), 200);
+      return () => clearTimeout(t);
+    }
+  }, [result]);
+
+  const navLinks = [
+    { label:'Features', id:'features' },
+    { label:'How It Works', id:'how-it-works' },
+    { label:'Dashboard', id:'dashboard' },
+    { label:'Reviews', id:'reviews' },
+    { label:'Contact', id:'contact' },
+  ];
+
+  const scoreColor = result
+    ? result.atsScore >= 70 ? '#4ade80' : result.atsScore >= 50 ? '#facc15' : '#f87171'
+    : '#4ade80';
+  const scoreGrad = result
+    ? result.atsScore >= 70
+      ? 'linear-gradient(to right,#4ade80,#10b981)'
+      : result.atsScore >= 50
+      ? 'linear-gradient(to right,#facc15,#f97316)'
+      : 'linear-gradient(to right,#f87171,#e11d48)'
+    : 'linear-gradient(to right,#4ade80,#10b981)';
+
+  // Review form handlers
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    if (!reviewForm.name.trim() || !reviewForm.text.trim() || reviewForm.rating === 0) {
+      showToast('Please fill all fields and select a rating', 'warning');
+      return;
+    }
+    const newReview = {
+      ...reviewForm,
+      date: new Date().toLocaleDateString(),
+      id: Date.now()
+    };
+    setReviews([newReview, ...reviews]);
+    setReviewForm({ name: '', rating: 0, text: '' });
+    showToast('Review submitted successfully!', 'success');
+  };
+
+  return (
+    <div style={{ minHeight:'100vh', background:'#030712', color:'#fff', overflowX:'hidden', fontFamily:'Inter,system-ui,sans-serif' }}>
+      {/* Background blobs */}
+      <div style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:0 }}>
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(135deg,rgba(88,28,135,0.18),#030712,rgba(29,78,216,0.15))', backgroundSize:'200% 200%' }} className="animate-gradient-bg"/>
+        <div className="blob" style={{ top:80, left:80, width:288, height:288, background:'rgba(139,92,246,0.22)', animationDuration:'6s' }}/>
+        <div className="blob" style={{ top:160, right:160, width:384, height:384, background:'rgba(59,130,246,0.13)', animationDuration:'6s', animationDelay:'2s' }}/>
+        <div className="blob" style={{ bottom:160, left:'33%', width:320, height:320, background:'rgba(236,72,153,0.12)', animationDuration:'6s', animationDelay:'4s' }}/>
+        <div className="blob" style={{ top:'50%', right:40, width:256, height:256, background:'rgba(34,211,238,0.08)', animationDuration:'7s' }}/>
+      </div>
+
+      {/* Nav */}
+      <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:50, borderBottom:'1px solid rgba(255,255,255,0.06)' }} className="glass">
+        <div style={{ maxWidth:1280, margin:'0 auto', padding:'0 24px', display:'flex', alignItems:'center', justifyContent:'space-between', height:64 }}>
+          <button onClick={() => scrollTo('hero')} style={{ display:'flex', alignItems:'center', gap:8, background:'none', border:'none', cursor:'pointer' }}>
+            <div style={{ width:34, height:34, borderRadius:8, background:'linear-gradient(135deg,#8b5cf6,#3b82f6)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <Ic name="Brain" size={18} color="#fff"/>
+            </div>
+            <span style={{ fontSize:'1.2rem', fontWeight:700 }} className="gradient-text">ResumeIQ AI</span>
+          </button>
+          <div style={{ display:'flex', alignItems:'center', gap:32 }} className="hidden-mobile">
+            {navLinks.map(l => (
+              <button key={l.id} onClick={() => scrollTo(l.id)}
+                style={{ background:'none', border:'none', color:'#d1d5db', cursor:'pointer', fontSize:'0.875rem', fontWeight:500 }}
+                className="nav-link-hover"
+                onMouseEnter={e=>e.target.style.color='#fff'} onMouseLeave={e=>e.target.style.color='#d1d5db'}>
+                {l.label}
+              </button>
+            ))}
+          </div>
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <button className="btn-glass" style={{ padding:'8px 20px', fontSize:'0.875rem' }} onClick={() => window.showEditor && window.showEditor()}>
+              ✏️ Edit Resume
+            </button>
+            <button onClick={() => scrollTo('upload-section')} className="btn-primary" style={{ padding:'8px 20px', fontSize:'0.875rem' }}>
+              Get Started Free
+            </button>
+            <button onClick={() => setMobileOpen(!mobileOpen)}
+              style={{ display:'none', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:8, padding:8, cursor:'pointer', color:'#fff' }}
+              className="show-mobile">
+              <Ic name={mobileOpen?'X':'Menu'} size={20}/>
+            </button>
+          </div>
+        </div>
+        {mobileOpen && (
+          <div className="glass" style={{ borderTop:'1px solid rgba(255,255,255,0.06)', padding:'12px 16px' }}>
+            {navLinks.map(l => (
+              <button key={l.id} onClick={() => scrollTo(l.id)}
+                style={{ display:'block', width:'100%', textAlign:'left', padding:'12px 16px', background:'none', border:'none', color:'#d1d5db', cursor:'pointer', fontSize:'0.875rem', borderRadius:8 }}>
+                {l.label}
+              </button>
+            ))}
+            <button onClick={() => scrollTo('upload-section')} className="btn-primary" style={{ width:'100%', justifyContent:'center', marginTop:8 }}>
+              Get Started Free
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero */}
+      <section id="hero" style={{ position:'relative', zIndex:10, paddingTop:130, paddingBottom:96, padding:'130px 24px 96px' }}>
+        <div style={{ maxWidth:1280, margin:'0 auto', textAlign:'center' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(139,92,246,0.35)', borderRadius:9999, padding:'6px 16px', marginBottom:32 }}>
+            <Ic name="Sparkles" size={16} color="#a78bfa"/>
+            <span style={{ fontSize:'0.875rem', color:'#d1d5db', fontWeight:500 }}>AI-Powered Resume Analysis</span>
+            <span style={{ width:8, height:8, borderRadius:'50%', background:'#4ade80', animation:'pulse 2s infinite' }}/>
+          </div>
+          <h1 style={{ fontSize:'clamp(2.5rem,7vw,4.5rem)', fontWeight:900, lineHeight:1.1, marginBottom:24, letterSpacing:'-0.02em' }}>
+            <span className="gradient-text">Optimize Your Resume.</span><br/>
+            <span>Beat ATS. Get Hired Faster.</span>
+          </h1>
+          <p style={{ fontSize:'clamp(1rem,2vw,1.2rem)', color:'#9ca3af', maxWidth:680, margin:'0 auto 40px', lineHeight:1.7 }}>
+            Upload your resume and receive an instant ATS score, missing keyword analysis, skill extraction, and actionable improvements powered by AI.
+          </p>
+          <div style={{ display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap', marginBottom:40 }}>
+            <button onClick={() => scrollTo('upload-section')} className="btn-primary btn-ping">
+              <Ic name="Upload" size={18}/> Analyze Resume Free <Ic name="ArrowRight" size={16}/>
+            </button>
+            <button onClick={() => scrollTo('dashboard')} className="btn-glass">
+              <Ic name="Play" size={16}/> View Dashboard
+            </button>
+          </div>
+          <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'center', gap:24, marginBottom:48, color:'#6b7280', fontSize:'0.875rem' }}>
+            {['No sign-up required','Privacy first','AI-powered analysis','Free to start'].map(b => (
+              <span key={b} style={{ display:'flex', alignItems:'center', gap:6 }}>
+                <Ic name="CheckCircle" size={14} color="#22c55e"/>{b}
+              </span>
+            ))}
+          </div>
+          <div className="glass-card neon-glow" style={{ maxWidth:860, margin:'0 auto', padding:32 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:16 }}>
+              <div style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.1)', padding:20, display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center' }}>
+                <ScoreRing score={85} size={100}/>
+                <p style={{ marginTop:12, fontSize:'0.7rem', color:'#9ca3af', textTransform:'uppercase', letterSpacing:'0.08em', fontWeight:500 }}>ATS Compatibility</p>
+                <span className="tag-green" style={{ marginTop:6 }}>PASS</span>
+              </div>
+              <div style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.1)', padding:20 }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
+                  <span style={{ fontWeight:600, fontSize:'0.875rem' }}>Keywords Found</span>
+                  <Ic name="Target" size={16} color="#a78bfa"/>
+                </div>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                  {['React','Node.js','AWS','Python','SQL','Docker','TypeScript'].map(k => (
+                    <span key={k} className="tag-purple">{k}</span>
+                  ))}
+                </div>
+                <p style={{ marginTop:10, fontSize:'0.75rem', color:'#6b7280' }}>12 skills detected</p>
+              </div>
+              <div style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.1)', padding:20 }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
+                  <span style={{ fontWeight:600, fontSize:'0.875rem' }}>AI Suggestions</span>
+                  <Ic name="Brain" size={16} color="#60a5fa"/>
+                </div>
+                {['Add quantifiable metrics','Improve summary section','Optimize formatting'].map(s => (
+                  <div key={s} style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8, fontSize:'0.75rem', color:'#9ca3af' }}>
+                    <Ic name="Sparkles" size={12} color="#facc15"/>{s}
+                  </div>
+                ))}
+                <p style={{ marginTop:6, fontSize:'0.75rem', color:'#6b7280' }}>8 improvements ready</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Upload */}
+      <section id="upload-section" style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:900, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:48 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>Get Started</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}>
+              <span className="gradient-text">Upload Your Resume</span>
+            </h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af' }}>Drag & drop your PDF and get instant AI-powered feedback in seconds</p>
+          </div>
+          <UploadBox onUpload={handleUpload}/>
+        </div>
+      </section>
+
+      {/* Results */}
+      {result && (
+        <section id="results" style={{ position:'relative', zIndex:10, padding:'0 24px 80px' }}>
+          <div style={{ maxWidth:1100, margin:'0 auto' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:32, flexWrap:'wrap', gap:12 }}>
+              <h3 style={{ fontSize:'1.75rem', fontWeight:800 }} className="gradient-text">Your Analysis Results</h3>
+              <button onClick={() => setResult(null)} className="btn-glass" style={{ padding:'8px 20px', fontSize:'0.875rem' }}>
+                <Ic name="RefreshCw" size={16}/> Analyze Another
+              </button>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:20, marginBottom:20 }}>
+              <div className="glass-card neon-glow" style={{ padding:24, display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center' }}>
+                <ScoreRing score={result.atsScore} size={130}/>
+                <p style={{ marginTop:14, fontSize:'0.875rem', color:'#9ca3af' }}>ATS Compatibility Score</p>
+                <span style={{ marginTop:8, fontSize:'0.75rem', fontWeight:700, padding:'4px 12px', borderRadius:9999,
+                  background: result.atsScore>=70?'rgba(74,222,128,0.15)':result.atsScore>=50?'rgba(250,204,21,0.15)':'rgba(248,113,113,0.15)',
+                  color: scoreColor }}>
+                  {result.atsScore>=70?'PASS':result.atsScore>=50?'BORDERLINE':'NEEDS WORK'}
+                </span>
+              </div>
+              <div className="glass-card" style={{ padding:24 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:14 }}>
+                  <Ic name="Cpu" size={18} color="#a78bfa"/>
+                  <span style={{ fontWeight:600, color:'#c4b5fd' }}>Technical Skills</span>
+                  <span className="tag-purple" style={{ marginLeft:'auto' }}>{result.technicalSkills.length}</span>
+                </div>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                  {result.technicalSkills.length>0
+                    ? result.technicalSkills.map((s,i) => <span key={i} className="tag-purple">{s}</span>)
+                    : <span style={{ color:'#6b7280', fontSize:'0.875rem' }}>No technical skills detected</span>}
+                </div>
+              </div>
+              <div className="glass-card" style={{ padding:24 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:14 }}>
+                  <Ic name="Award" size={18} color="#60a5fa"/>
+                  <span style={{ fontWeight:600, color:'#93c5fd' }}>Soft Skills</span>
+                  <span className="tag-blue" style={{ marginLeft:'auto' }}>{result.softSkills.length}</span>
+                </div>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                  {result.softSkills.length>0
+                    ? result.softSkills.map((s,i) => <span key={i} className="tag-blue">{s}</span>)
+                    : <span style={{ color:'#6b7280', fontSize:'0.875rem' }}>No soft skills detected</span>}
+                </div>
+              </div>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:20, marginBottom:20 }}>
+              <div className="glass-card" style={{ padding:24 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                  <Ic name="AlertCircle" size={18} color="#f87171"/>
+                  <span style={{ fontWeight:600, color:'#fca5a5' }}>Missing Keywords</span>
+                </div>
+                <p style={{ fontSize:'0.75rem', color:'#6b7280', marginBottom:12 }}>Consider adding these to improve ATS pass rate</p>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                  {result.missingKeywords.map((k,i) => <span key={i} className="tag-red">+ {k}</span>)}
+                </div>
+              </div>
+              <div className="glass-card" style={{ padding:24 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:14 }}>
+                  <Ic name="Sparkles" size={18} color="#facc15"/>
+                  <span style={{ fontWeight:600, color:'#fde68a' }}>AI Suggestions</span>
+                </div>
+                {result.suggestions.map((s,i) => (
+                  <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10, marginBottom:10 }}>
+                    <div style={{ width:20, height:20, borderRadius:'50%', background:'rgba(250,204,21,0.18)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
+                      <span style={{ fontSize:'0.65rem', fontWeight:700, color:'#facc15' }}>{i+1}</span>
+                    </div>
+                    <span style={{ fontSize:'0.875rem', color:'#d1d5db', lineHeight:1.5 }}>{s}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="glass-card" style={{ padding:24 }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                  <Ic name="BarChart" size={18} color="#4ade80"/>
+                  <span style={{ fontWeight:600, color:'#86efac' }}>Resume Strength</span>
+                </div>
+                <span style={{ fontWeight:700, color: scoreColor }}>{result.atsScore}%</span>
+              </div>
+              <div style={{ height:10, background:'rgba(255,255,255,0.08)', borderRadius:9999, overflow:'hidden' }}>
+                <div style={{ height:'100%', width:`${scoreAnim}%`, background: scoreGrad, borderRadius:9999, transition:'width 1.3s ease' }}/>
+              </div>
+              <div style={{ display:'flex', justifyContent:'space-between', marginTop:6, fontSize:'0.7rem', color:'#6b7280' }}>
+                <span>0%</span><span>50% (borderline)</span><span>70%+ (pass)</span><span>100%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Features */}
+      <section id="features" style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:1280, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:64 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>Features</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}><span className="gradient-text">Powerful Features</span></h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af', maxWidth:560, margin:'0 auto' }}>Everything you need to create the perfect resume and land more interviews</p>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:20 }}>
+            {[
+              { name:'Shield', title:'ATS Score Checker', desc:'Discover how well your resume performs against modern ATS with visual pass/fail indicators.', color:'#4ade80', bg:'rgba(74,222,128,0.15)',
+                extra: <div style={{ marginTop:12, fontSize:'0.75rem' }}><div style={{ display:'flex', justifyContent:'space-between', marginBottom:4, color:'#9ca3af' }}><span>Compatibility</span><span style={{ color:'#4ade80', fontWeight:600 }}>85%</span></div><div style={{ height:6, background:'rgba(255,255,255,0.08)', borderRadius:9999 }}><div style={{ height:'100%', width:'85%', background:'linear-gradient(to right,#4ade80,#10b981)', borderRadius:9999 }}/></div></div> },
+              { name:'Search', title:'Missing Keywords', desc:'Identify keywords recruiters and ATS are searching for, with industry-specific suggestions.', color:'#a78bfa', bg:'rgba(139,92,246,0.15)',
+                extra: <div style={{ display:'flex', flexWrap:'wrap', gap:4, marginTop:12 }}>{['docker','k8s','ci/cd'].map(k=><span key={k} className="tag-red">+{k}</span>)}</div> },
+              { name:'Brain', title:'AI Skill Extraction', desc:'Automatically extract technical and soft skills with intelligent categorization.', color:'#60a5fa', bg:'rgba(59,130,246,0.15)',
+                extra: <div style={{ display:'flex', flexWrap:'wrap', gap:4, marginTop:12 }}>{['React','Python','SQL','AWS'].map(s=><span key={s} className="tag-blue">{s}</span>)}</div> },
+              { name:'Sparkles', title:'AI Suggestions', desc:'Receive personalized recommendations to strengthen every section of your resume.', color:'#f472b6', bg:'rgba(244,114,182,0.15)',
+                extra: <div style={{ marginTop:12 }}>{['Improve Summary','Add Metrics'].map(s=><div key={s} style={{ display:'flex', alignItems:'center', gap:6, marginBottom:6, fontSize:'0.75rem', color:'#9ca3af' }}><Ic name="Sparkles" size={11} color="#facc15"/>{s}</div>)}</div> },
+            ].map((f,i) => (
+              <div key={i} className="glass-card tilt-card reveal" style={{ padding:24, transition:'transform 0.2s', cursor:'default' }}
+                onMouseEnter={e=>e.currentTarget.style.transform='translateY(-4px)'}
+                onMouseLeave={e=>e.currentTarget.style.transform='translateY(0)'}>
+                <div style={{ width:48, height:48, borderRadius:12, background:f.bg, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
+                  <Ic name={f.name} size={24} color={f.color}/>
+                </div>
+                <h3 style={{ fontWeight:700, fontSize:'1.05rem', marginBottom:8 }}>{f.title}</h3>
+                <p style={{ fontSize:'0.875rem', color:'#9ca3af', lineHeight:1.6 }}>{f.desc}</p>
+                {f.extra}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:64 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>Process</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}><span className="gradient-text">How It Works</span></h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af' }}>Four simple steps to optimize your resume</p>
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))', gap:40, textAlign:'center' }}>
+            {[
+              { name:'Upload',   title:'Upload Resume',  desc:'Drag & drop your PDF resume', color:'#a78bfa' },
+              { name:'Brain',    title:'AI Processes',   desc:'Our AI analyzes every section',   color:'#60a5fa' },
+              { name:'Shield',   title:'Get ATS Score',  desc:'Receive instant compatibility score', color:'#4ade80' },
+              { name:'Sparkles', title:'Improve & Win',  desc:'Apply suggestions and get hired', color:'#f472b6' },
+            ].map((s,i) => (
+              <div key={i}>
+                <div style={{ position:'relative', display:'inline-block', marginBottom:20 }}>
+                  <div className="glass neon-glow step-icon" style={{ width:72, height:72, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <Ic name={s.name} size={32} color={s.color}/>
+                  </div>
+                  <div style={{ position:'absolute', top:-4, right:-4, width:26, height:26, borderRadius:'50%', background:'linear-gradient(to right,#8b5cf6,#3b82f6)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.75rem' }}>{i+1}</div>
+                </div>
+                <h3 style={{ fontWeight:700, marginBottom:6 }}>{s.title}</h3>
+                <p style={{ fontSize:'0.875rem', color:'#9ca3af', lineHeight:1.6 }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Real Live Dashboard */}
+      <section id="dashboard" style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:64 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>Dashboard</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}><span className="gradient-text">Your Resume Dashboard</span></h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af' }}>
+              {result ? 'Live results from your latest uploaded resume' : 'Upload a resume above to see your personalized dashboard'}
+            </p>
+          </div>
+
+          {!result ? (
+            /* Placeholder state */
+            <div className="glass-card" style={{ padding:64, textAlign:'center', maxWidth:600, margin:'0 auto' }}>
+              <div style={{ width:80, height:80, borderRadius:'50%', background:'linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.2))', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 24px' }}>
+                <Ic name="BarChart" size={40} color="#a78bfa"/>
+              </div>
+              <h3 style={{ fontSize:'1.3rem', fontWeight:700, marginBottom:12 }}>No Resume Analyzed Yet</h3>
+              <p style={{ color:'#6b7280', marginBottom:28, lineHeight:1.7 }}>Upload your PDF resume above and your personalized dashboard with ATS score, skills, keywords, and AI suggestions will appear here instantly.</p>
+              <button onClick={() => scrollTo('upload-section')} className="btn-primary">
+                <Ic name="Upload" size={18}/> Upload Resume Now
+              </button>
+            </div>
+          ) : (() => {
+            // Derive sub-bar scores
+            const formattingScore = Math.min(95, 60 + (result.technicalSkills.length * 2));
+            const keywordsScore   = Math.min(95, Math.round((result.technicalSkills.length / (result.technicalSkills.length + result.missingKeywords.length + 1)) * 100));
+            const experienceScore = Math.min(95, Math.max(30, result.atsScore - 5 + Math.floor(Math.random() * 10)));
+            const clamp = v => Math.max(30, Math.min(95, v));
+            const fmtS = clamp(formattingScore);
+            const kwS  = clamp(keywordsScore);
+            const expS = clamp(experienceScore);
+
+            return (
+              <div className="glass-card neon-glow" style={{ padding:32 }}>
+                {/* top bar */}
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:24, paddingBottom:20, borderBottom:'1px solid rgba(255,255,255,0.08)', flexWrap:'wrap', gap:12 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <div style={{ width:38, height:38, borderRadius:10, background:'linear-gradient(135deg,#8b5cf6,#3b82f6)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      <Ic name="Brain" size={20} color="#fff"/>
+                    </div>
+                    <div>
+                      <p style={{ fontWeight:600, fontSize:'0.875rem' }}>Resume Analysis</p>
+                      <p style={{ fontSize:'0.75rem', color:'#6b7280' }}>Analyzed just now</p>
+                    </div>
+                  </div>
+                  <span style={{ display:'flex', alignItems:'center', gap:6, background:'rgba(74,222,128,0.15)', color:'#4ade80', borderRadius:9999, padding:'4px 12px', fontSize:'0.75rem', fontWeight:600 }}>
+                    <span style={{ width:7, height:7, borderRadius:'50%', background:'#4ade80', animation:'pulse 2s infinite' }}/>Analysis Complete
+                  </span>
+                </div>
+                {/* stats row */}
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))', gap:14, marginBottom:20 }}>
+                  {[
+                    { label:'ATS Score',    value:`${result.atsScore}%`,              color:'#4ade80', name:'Shield' },
+                    { label:'Skills Found', value:`${result.technicalSkills.length + result.softSkills.length}`, color:'#a78bfa', name:'Cpu' },
+                    { label:'Missing KW',   value:`${result.missingKeywords.length}`,  color:'#f87171', name:'AlertCircle' },
+                    { label:'Suggestions',  value:`${result.suggestions.length}`,      color:'#facc15', name:'Sparkles' },
+                  ].map(s => (
+                    <div key={s.label} style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.07)', padding:16, textAlign:'center' }}>
+                      <Ic name={s.name} size={18} color={s.color}/>
+                      <p style={{ fontSize:'1.5rem', fontWeight:700, color:s.color, margin:'6px 0 2px' }}>{s.value}</p>
+                      <p style={{ fontSize:'0.7rem', color:'#6b7280' }}>{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+                {/* main panels */}
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:16 }}>
+                  {/* score ring + sub-bars */}
+                  <div style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.07)', padding:20, display:'flex', flexDirection:'column', alignItems:'center' }}>
+                    <ScoreRing score={result.atsScore} size={110}/>
+                    <div style={{ width:'100%', marginTop:16 }}>
+                      {[
+                        { label:'Formatting', value: fmtS },
+                        { label:'Keywords',   value: kwS },
+                        { label:'Experience', value: expS },
+                      ].map(item=>(
+                        <div key={item.label} style={{ marginBottom:10 }}>
+                          <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.75rem', color:'#9ca3af', marginBottom:4 }}>
+                            <span>{item.label}</span><span style={{ color:'#d1d5db' }}>{item.value}%</span>
+                          </div>
+                          <div style={{ height:5, background:'rgba(255,255,255,0.08)', borderRadius:9999 }}>
+                            <div style={{ height:'100%', width:`${item.value}%`, background:'linear-gradient(to right,#a78bfa,#60a5fa)', borderRadius:9999, transition:'width 1.2s ease' }}/>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* skills */}
+                  <div style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.07)', padding:20 }}>
+                    <p style={{ fontSize:'0.875rem', fontWeight:600, marginBottom:6, color:'#c4b5fd' }}>Technical Skills</p>
+                    <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:14 }}>
+                      {result.technicalSkills.length > 0
+                        ? result.technicalSkills.map((s,i)=><span key={i} className="tag-purple">{s}</span>)
+                        : <span style={{ color:'#6b7280', fontSize:'0.8rem' }}>None detected</span>}
+                    </div>
+                    <p style={{ fontSize:'0.875rem', fontWeight:600, marginBottom:6, color:'#93c5fd' }}>Soft Skills</p>
+                    <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                      {result.softSkills.length > 0
+                        ? result.softSkills.map((s,i)=><span key={i} className="tag-blue">{s}</span>)
+                        : <span style={{ color:'#6b7280', fontSize:'0.8rem' }}>None detected</span>}
+                    </div>
+                    <p style={{ marginTop:10, fontSize:'0.7rem', color:'#6b7280' }}>{result.technicalSkills.length + result.softSkills.length} skills across categories</p>
+                  </div>
+                  {/* suggestions feed + missing kw */}
+                  <div style={{ background:'rgba(255,255,255,0.05)', borderRadius:12, border:'1px solid rgba(255,255,255,0.07)', padding:20 }}>
+                    <p style={{ fontSize:'0.875rem', fontWeight:600, marginBottom:10, color:'#fde68a' }}>AI Suggestions</p>
+                    {result.suggestions.map((s,i)=>(
+                      <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:8, background:'rgba(250,204,21,0.08)', borderRadius:8, padding:'7px 10px', marginBottom:7 }}>
+                        <span style={{ fontSize:'0.85rem' }}>✨</span>
+                        <span style={{ fontSize:'0.78rem', color:'#d1d5db', lineHeight:1.5 }}>{s}</span>
+                      </div>
+                    ))}
+                    <p style={{ fontSize:'0.875rem', fontWeight:600, marginBottom:8, marginTop:14, color:'#fca5a5' }}>Missing Keywords</p>
+                    <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+                      {result.missingKeywords.map((k,i)=><span key={i} className="tag-red">+{k}</span>)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </section>
+
+      {/* Live Community Reviews */}
+      <section id="reviews" style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:1100, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:64 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>Community</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}><span className="gradient-text">User Reviews</span></h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af' }}>Share your experience and help others find their dream job</p>
+          </div>
+
+          {/* Review Form */}
+          <div className="glass-card" style={{ padding:32, maxWidth:600, margin:'0 auto 48px', border:'1px solid rgba(139,92,246,0.25)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:24 }}>
+              <Ic name="MessageCircle" size={22} color="#a78bfa"/>
+              <h3 style={{ fontWeight:700, fontSize:'1.1rem' }}>Leave a Review</h3>
+            </div>
+            <form onSubmit={handleSubmitReview}>
+              {/* Name */}
+              <div style={{ marginBottom:16 }}>
+                <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#c4b5fd', marginBottom:6 }}>Your Name *</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Priya Sharma"
+                  value={reviewForm.name}
+                  onChange={e => setReviewForm({...reviewForm, name: e.target.value})}
+                  style={{ width:'100%', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'10px 14px', color:'#fff', fontSize:'0.9rem', outline:'none', transition:'border-color 0.2s' }}
+                  onFocus={e=>e.target.style.borderColor='rgba(139,92,246,0.6)'}
+                  onBlur={e=>e.target.style.borderColor='rgba(255,255,255,0.12)'}
+                />
+              </div>
+              {/* Star Rating */}
+              <div style={{ marginBottom:16 }}>
+                <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#c4b5fd', marginBottom:8 }}>Rating *</label>
+                <div style={{ display:'flex', gap:4 }}>
+                  {[1,2,3,4,5].map(star => {
+                    const filled = star <= (hoverRating || reviewForm.rating);
+                    return (
+                      <button
+                        key={star}
+                        type="button"
+                        className="star-btn"
+                        onClick={() => setReviewForm({...reviewForm, rating: star})}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        style={{ color: filled ? '#facc15' : 'rgba(255,255,255,0.2)', fontSize:'1.6rem', background:'none', border:'none', cursor:'pointer', padding:'2px 3px', transition:'transform 0.1s, color 0.1s' }}
+                        onMouseDown={e=>e.currentTarget.style.transform='scale(0.9)'}
+                        onMouseUp={e=>e.currentTarget.style.transform='scale(1.1)'}
+                      >
+                        ★
+                      </button>
+                    );
+                  })}
+                  {reviewForm.rating > 0 && (
+                    <span style={{ marginLeft:8, fontSize:'0.8rem', color:'#9ca3af', alignSelf:'center' }}>
+                      {['','Poor','Fair','Good','Great','Excellent!'][reviewForm.rating]}
+                    </span>
+                  )}
+                </div>
+              </div>
+              {/* Review text */}
+              <div style={{ marginBottom:20 }}>
+                <label style={{ display:'block', fontSize:'0.8rem', fontWeight:600, color:'#c4b5fd', marginBottom:6 }}>Your Review *</label>
+                <textarea
+                  rows={4}
+                  placeholder="Tell us about your experience with ResumeIQ AI..."
+                  value={reviewForm.text}
+                  onChange={e => setReviewForm({...reviewForm, text: e.target.value})}
+                  style={{ width:'100%', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:10, padding:'10px 14px', color:'#fff', fontSize:'0.9rem', outline:'none', resize:'vertical', fontFamily:'inherit', transition:'border-color 0.2s' }}
+                  onFocus={e=>e.target.style.borderColor='rgba(139,92,246,0.6)'}
+                  onBlur={e=>e.target.style.borderColor='rgba(255,255,255,0.12)'}
+                />
+              </div>
+              <button type="submit" className="btn-primary" style={{ width:'100%', justifyContent:'center' }}>
+                <Ic name="Star" size={16} color="#facc15"/> Submit Review
+              </button>
+            </form>
+          </div>
+
+          {/* Reviews Grid */}
+          {reviews.length === 0 ? (
+            <div style={{ textAlign:'center', padding:'40px 24px' }}>
+              <div style={{ fontSize:'3rem', marginBottom:16 }}>💬</div>
+              <h3 style={{ fontSize:'1.2rem', fontWeight:700, marginBottom:8, color:'#d1d5db' }}>Be the first to leave a review!</h3>
+              <p style={{ color:'#6b7280', fontSize:'0.9rem' }}>Share your experience with the community above.</p>
+            </div>
+          ) : (
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))', gap:20 }}>
+              {reviews.map((r, i) => {
+                const gradients = [
+                  'linear-gradient(to right,#8b5cf6,#3b82f6)',
+                  'linear-gradient(to right,#3b82f6,#06b6d4)',
+                  'linear-gradient(to right,#ec4899,#8b5cf6)',
+                  'linear-gradient(to right,#f97316,#facc15)',
+                  'linear-gradient(to right,#4ade80,#10b981)',
+                ];
+                const grad = gradients[i % gradients.length];
+                return (
+                  <div key={r.id} className="glass-card" style={{ padding:24, transition:'transform 0.2s', cursor:'default' }}
+                    onMouseEnter={e=>e.currentTarget.style.transform='translateY(-4px)'}
+                    onMouseLeave={e=>e.currentTarget.style.transform='translateY(0)'}>
+                    <div style={{ display:'flex', marginBottom:12 }}>
+                      {[1,2,3,4,5].map(j=>(
+                        <span key={j} style={{ fontSize:'1rem', color: j <= r.rating ? '#facc15' : 'rgba(255,255,255,0.15)' }}>★</span>
+                      ))}
+                    </div>
+                    <p style={{ color:'#d1d5db', fontSize:'0.9rem', lineHeight:1.7, marginBottom:20 }}>"{r.text}"</p>
+                    <div style={{ display:'flex', alignItems:'center', gap:12, paddingTop:16, borderTop:'1px solid rgba(255,255,255,0.08)' }}>
+                      <div style={{ width:40, height:40, borderRadius:'50%', background:grad, display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'1.1rem', flexShrink:0 }}>
+                        {r.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div style={{ flex:1 }}>
+                        <p style={{ fontWeight:600, fontSize:'0.9rem' }}>{r.name}</p>
+                        <p style={{ fontSize:'0.75rem', color:'#6b7280' }}>{r.date}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:760, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:64 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>FAQ</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}><span className="gradient-text">Common Questions</span></h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af' }}>Everything you need to know about ResumeIQ AI</p>
+          </div>
+          <FAQItem question="What is ATS?" answer="ATS (Applicant Tracking System) is software most companies use to automatically scan and filter resumes before a human ever sees them. Our tool analyzes your resume against common ATS criteria and gives you a score so you know how likely you are to pass that first automated screen." />
+          <FAQItem question="How accurate is the AI analysis?" answer="Our analysis is powered by advanced AI trained on thousands of resumes across various industries. While no automated tool can perfectly replicate a human recruiter, our system accurately detects keywords, skill patterns, and formatting issues that typically cause ATS failures." />
+          <FAQItem question="Is my resume stored on your servers?" answer="No. Your resume is processed entirely in your browser and is never uploaded to any server. We take privacy seriously — your data stays on your device." />
+          <FAQItem question="Which file formats are supported?" answer="We currently support PDF files, which is the most ATS-friendly format. Support for DOCX and TXT formats is coming soon." />
+          <FAQItem question="Do I need to create an account?" answer="No account is required. Simply upload your resume and get your analysis instantly. It's completely free to start." />
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section style={{ position:'relative', zIndex:10, padding:'40px 24px 80px' }}>
+        <div style={{ maxWidth:800, margin:'0 auto' }}>
+          <div className="glass-card" style={{ padding:56, textAlign:'center', position:'relative', overflow:'hidden' }}>
+            <div style={{ position:'absolute', inset:0, background:'linear-gradient(135deg,rgba(139,92,246,0.12),rgba(59,130,246,0.12))', pointerEvents:'none' }}/>
+            <h2 style={{ fontSize:'clamp(1.75rem,3.5vw,2.5rem)', fontWeight:800, marginBottom:16 }}>
+              Ready to <span className="gradient-text">land more interviews?</span>
+            </h2>
+            <p style={{ color:'#9ca3af', marginBottom:32, maxWidth:480, margin:'0 auto 32px', lineHeight:1.7 }}>
+              Upload your resume now and find out exactly what's holding you back from your dream job.
+            </p>
+            <button onClick={() => scrollTo('upload-section')} className="btn-primary">
+              <Ic name="Upload" size={18}/> Analyze Resume Free
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Contact Section ── */}
+      <section id="contact" style={{ position:'relative', zIndex:10, padding:'80px 24px' }}>
+        <div style={{ maxWidth:900, margin:'0 auto' }}>
+          <div style={{ textAlign:'center', marginBottom:56 }}>
+            <span style={{ fontSize:'0.7rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.15em', color:'#a78bfa', display:'block', marginBottom:10 }}>Get In Touch</span>
+            <h2 style={{ fontSize:'clamp(2rem,4vw,3rem)', fontWeight:800, marginBottom:12 }}>
+              <span className="gradient-text">Let's Connect</span>
+            </h2>
+            <p style={{ fontSize:'1.1rem', color:'#9ca3af' }}>Let's connect and build something great</p>
+          </div>
+
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:16 }}>
+            {[
+              { icon:'✉️',  label:'Gmail',     sub:'sudharsun9944@gmail.com',          href:'https://mail.google.com/mail/?view=cm&to=sudharsun9944@gmail.com', color:'#f87171' },
+              { icon:'📱',  label:'Phone',     sub:'99444 67382',                       href:'tel:+919944467382',                                               color:'#60a5fa' },
+              { icon:'💼',  label:'LinkedIn',  sub:'sudharsun-r',                       href:'https://www.linkedin.com/in/sudharsun-r-340941281',                color:'#38bdf8' },
+              { icon:'💬',  label:'WhatsApp',  sub:'Chat with me',                      href:'https://wa.me/9944467382',                                        color:'#4ade80' },
+              { icon:'📷',  label:'Instagram', sub:'@_the.dexter._',                   href:'https://www.instagram.com/_the.dexter._/',                         color:'#f472b6' },
+              { icon:'🐙',  label:'GitHub',    sub:'DextertheCobra',                    href:'https://github.com/DextertheCobra',                                color:'#a78bfa' },
+            ].map((c, i) => (
+              <a key={i} href={c.href} target="_blank" rel="noopener noreferrer"
+                className="contact-card"
+                style={{ display:'flex', alignItems:'center', gap:16, padding:20,
+                  background:'linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03))',
+                  border:'1px solid rgba(255,255,255,0.08)', borderRadius:16,
+                  textDecoration:'none', color:'inherit',
+                  transition:'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
+                  cursor:'pointer' }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-5px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = `0 12px 40px ${c.color}33`;
+                  e.currentTarget.style.borderColor = `${c.color}55`;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                }}
+              >
+                <div style={{ width:48, height:48, borderRadius:14, flexShrink:0,
+                  background:`${c.color}1a`, border:`1px solid ${c.color}33`,
+                  display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.4rem' }}>
+                  {c.icon}
+                </div>
+                <div>
+                  <p style={{ fontWeight:700, fontSize:'0.95rem', marginBottom:2, color:'#f1f5f9' }}>{c.label}</p>
+                  <p style={{ fontSize:'0.8rem', color:'#9ca3af' }}>{c.sub}</p>
+                </div>
+                <div style={{ marginLeft:'auto', opacity:0.4, fontSize:'0.8rem' }}>→</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer style={{ position:'relative', zIndex:10, padding:'32px 24px', borderTop:'1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ maxWidth:1280, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:12 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+            <div style={{ width:28, height:28, borderRadius:7, background:'linear-gradient(135deg,#8b5cf6,#3b82f6)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <Ic name="Brain" size={15} color="#fff"/>
+            </div>
+            <span style={{ fontWeight:700, fontSize:'1rem' }} className="gradient-text">ResumeIQ AI</span>
+          </div>
+          <p style={{ fontSize:'0.8rem', color:'#6b7280' }}>Built with 🧠 by <strong style={{ color:'#a78bfa' }}>Sudharsun</strong></p>
+          <p style={{ display:'flex', alignItems:'center', gap:6, fontSize:'0.8rem', color:'#6b7280' }}>
+            Built with <Ic name="Zap" size={13} color="#facc15"/> React + AI
+          </p>
+        </div>
+      </footer>
+
+      {/* Overlays */}
+      {loading && <LoadingScreen/>}
+      {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)}/>}
+
+      {/* Author Credit — always visible */}
+      <div style={{
+        position:'fixed', bottom:16, right:16, zIndex:9999,
+        background:'rgba(139,92,246,0.15)', backdropFilter:'blur(12px)',
+        WebkitBackdropFilter:'blur(12px)',
+        border:'1px solid rgba(139,92,246,0.35)', borderRadius:10,
+        padding:'7px 14px', display:'flex', alignItems:'center', gap:7,
+        fontSize:'0.75rem', color:'#c4b5fd', userSelect:'none', pointerEvents:'none'
+      }}>
+        <span style={{ fontSize:'0.9rem' }}>⚡</span>
+        Made by <strong style={{ color:'#a78bfa' }}>Sudharsun</strong>
+      </div>
+
+      {/* Responsive + animation helpers */}
+      <style>{`
+        @media (max-width: 768px) {
+          .hidden-mobile { display: none !important; }
+          .show-mobile   { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .show-mobile { display: none !important; }
+        }
+        .icon { width: 100%; height: 100%; }
+        @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:.4} }
+        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+      `}</style>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+     RESUME EDITOR OVERLAY  (self-contained, no React)
+     Opens when user clicks "Edit Resume" in the nav.
+     ═══════════════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+/* ── Editor overlay ── */
+#editor-overlay{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:#0a0a0f;overflow-y:auto;font-family:'Inter',system-ui,sans-serif;
+}
+#editor-overlay.open{display:block}
+
+/* NAV */
+#eo-nav{
+  position:sticky;top:0;height:58px;background:rgba(10,10,15,.97);
+  backdrop-filter:blur(12px);border-bottom:1px solid #1f2937;
+  z-index:10;display:flex;align-items:center;padding:0 20px;gap:10px;
+}
+.eo-brand{display:flex;align-items:center;gap:8px}
+.eo-logo{width:30px;height:30px;background:linear-gradient(135deg,#7c3aed,#2563eb);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.eo-title-txt{font-size:1rem;font-weight:700;background:linear-gradient(to right,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.eo-sep{width:1px;height:18px;background:#1f2937}
+.eo-label{font-size:.78rem;font-weight:600;color:#7c3aed}
+.eo-nav-right{margin-left:auto;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+
+/* BUTTONS */
+.eb{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;font-size:.78rem;font-weight:600;border:none;cursor:pointer;border-radius:7px;transition:all .15s;font-family:inherit}
+.eb-purple{background:linear-gradient(to right,#7c3aed,#2563eb);color:#fff}
+.eb-purple:hover{opacity:.9}
+.eb-outline{background:rgba(255,255,255,.06);border:1px solid #374151;color:#d1d5db}
+.eb-outline:hover{background:rgba(255,255,255,.11)}
+.eb-red{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+.eb-red:hover{background:rgba(239,68,68,.22)}
+.eb-dashed{width:100%;justify-content:center;background:rgba(74,222,128,.07);border:1.5px dashed rgba(74,222,128,.3);color:#86efac;border-radius:8px;padding:9px;margin-top:7px}
+.eb-dashed:hover{background:rgba(74,222,128,.14)}
+.eb-sm{padding:5px 10px;font-size:.72rem}
+
+/* LAYOUT */
+.eo-body{display:grid;grid-template-columns:390px 1fr;gap:18px;max-width:1340px;margin:0 auto;padding:16px 18px 40px}
+@media(max-width:900px){.eo-body{grid-template-columns:1fr}}
+
+/* TABS */
+.eo-tabs{display:flex;gap:3px;padding:5px;background:#111827;border-radius:10px;border:1px solid #1f2937;margin-bottom:12px}
+.eo-tab{flex:1;padding:6px 3px;font-size:.7rem;font-weight:600;border:none;cursor:pointer;border-radius:6px;background:transparent;color:#6b7280;font-family:inherit;text-align:center;transition:all .18s}
+.eo-tab.on{background:#1f2937;color:#a78bfa}
+
+/* SECTION CARD */
+.esc{background:#111827;border:1px solid #1f2937;border-radius:11px;padding:16px;margin-bottom:10px}
+.esc-t{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#7c3aed;margin-bottom:12px}
+
+/* FORM */
+.efg{margin-bottom:10px}
+.efl{display:block;font-size:.7rem;font-weight:600;color:#9ca3af;margin-bottom:3px}
+.efi,.eft,.efs{width:100%;background:#0f172a;border:1px solid #1f2937;border-radius:7px;padding:8px 11px;color:#f1f5f9;font-size:.84rem;outline:none;font-family:inherit;transition:border-color .18s}
+.efi:focus,.eft:focus,.efs:focus{border-color:#7c3aed}
+.eft{resize:vertical;min-height:76px}
+.efs option{background:#0f172a}
+.eg2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:480px){.eg2{grid-template-columns:1fr}}
+
+/* SKILL TAGS */
+.etag{display:inline-flex;align-items:center;gap:4px;background:#1f2937;border:1px solid #374151;color:#d1d5db;border-radius:6px;padding:3px 8px;font-size:.72rem}
+.etag button{background:none;border:none;color:#6b7280;cursor:pointer;font-size:.72rem;padding:0 1px}
+.etag button:hover{color:#f87171}
+.eqc{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.eqchip{background:#1f2937;border:1px solid #374151;color:#9ca3af;border-radius:5px;padding:2px 8px;font-size:.7rem;cursor:pointer;font-family:inherit}
+.eqchip:hover{border-color:#7c3aed;color:#c4b5fd}
+
+/* ENTRY CARD */
+.eec{background:#0f172a;border:1px solid #1f2937;border-radius:7px;padding:12px;margin-bottom:8px}
+.eec-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.eec-n{font-size:.67rem;font-weight:700;color:#7c3aed}
+
+/* TOAST */
+#eo-toast{position:fixed;top:68px;right:14px;z-index:9999;background:#111827;border:1px solid #374151;border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:9px;font-size:.8rem;color:#e5e7eb;min-width:240px;opacity:0;transform:translateY(-5px);transition:all .28s;pointer-events:none}
+#eo-toast.on{opacity:1;transform:translateY(0);pointer-events:all}
+
+/* PREVIEW */
+.eo-preview-wrap{position:sticky;top:74px;max-height:calc(100vh - 88px);overflow-y:auto}
+.eo-preview-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.eo-pbox{background:#fff;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,.65)}
+
+/* ATS resume styles inside preview */
+#eo-rp{
+  background:#fff;color:#000;
+  font-family:'Times New Roman',Times,serif;
+  font-size:11pt;line-height:1.45;
+  padding:.6in .65in;min-height:10in;width:100%;
+}
+#eo-rp .rn{font-size:20pt;font-weight:700;text-align:center;margin-bottom:2px}
+#eo-rp .rh{font-size:11pt;text-align:center;margin-bottom:5px}
+#eo-rp .rc{font-size:9.5pt;text-align:center;margin-bottom:10px;line-height:1.65}
+#eo-rp .rc span+span::before{content:' | '}
+#eo-rp hr{border:none;border-top:1.5px solid #000;margin:7px 0}
+#eo-rp .rst{font-size:10.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;margin-top:11px}
+#eo-rp .re{margin-bottom:7px}
+#eo-rp .rrow{display:flex;justify-content:space-between;align-items:baseline}
+#eo-rp .rb{font-weight:700;font-size:10.5pt}
+#eo-rp .rs{font-size:10pt;font-style:italic}
+#eo-rp .rd{font-size:10pt;white-space:nowrap}
+#eo-rp .rdesc{font-size:10pt;margin-top:3px;white-space:pre-wrap}
+#eo-rp .rsk{font-size:10pt;line-height:1.6}
+#eo-rp .rph{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:460px;color:#9ca3af;text-align:center;font-family:'Inter',sans-serif}
+
+/* COMPLETENESS */
+.eo-comp{margin-top:10px;padding:11px 14px;background:#111827;border:1px solid #1f2937;border-radius:9px;display:flex;align-items:center;gap:10px}
+.eo-track{flex:1;height:5px;background:#1f2937;border-radius:9999px;overflow:hidden}
+.eo-fill{height:100%;background:linear-gradient(to right,#7c3aed,#22c55e);border-radius:9999px;transition:width .45s ease}
+</style>
+
+<!-- ── EDITOR HTML ── -->
+<div id="editor-overlay">
+
+  <div id="eo-toast"><span id="eo-ti"></span><span id="eo-tm"></span></div>
+
+  <!-- Nav -->
+  <div id="eo-nav">
+    <div class="eo-brand">
+      <div class="eo-logo">🧠</div>
+      <span class="eo-title-txt">ResumeIQ AI</span>
+    </div>
+    <div class="eo-sep"></div>
+    <span class="eo-label">✏️ Resume Editor</span>
+    <div class="eo-nav-right">
+      <button class="eb eb-outline eb-sm" onclick="eoLoadSample()">📋 Sample</button>
+      <button class="eb eb-outline eb-sm" onclick="eoReset()">🔄 Reset</button>
+      <button class="eb eb-purple" onclick="eoDL()" id="eo-dl-btn">⬇ Download PDF</button>
+      <button class="eb eb-outline" onclick="window.hideEditor()" style="border-color:#374151">✕ Close</button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="eo-body">
+
+    <!-- LEFT: EDITOR -->
+    <div>
+      <div class="eo-tabs">
+        <button class="eo-tab on" id="eot-basics"     onclick="eoTab('basics')">👤 Basics</button>
+        <button class="eo-tab"    id="eot-experience" onclick="eoTab('experience')">💼 Exp</button>
+        <button class="eo-tab"    id="eot-education"  onclick="eoTab('education')">🎓 Edu</button>
+        <button class="eo-tab"    id="eot-skills"     onclick="eoTab('skills')">🛠 Skills</button>
+        <button class="eo-tab"    id="eot-extras"     onclick="eoTab('extras')">⭐ Extras</button>
+      </div>
+
+      <!-- BASICS -->
+      <div id="eop-basics">
+        <div class="esc">
+          <div class="esc-t">Personal Information</div>
+          <div class="efg"><label class="efl">Full Name *</label><input class="efi" id="eo-name" placeholder="Alex Johnson" oninput="eoUp()"/></div>
+          <div class="efg"><label class="efl">Job Title / Headline</label><input class="efi" id="eo-title" placeholder="Senior Software Engineer" oninput="eoUp()"/></div>
+          <div class="eg2">
+            <div class="efg"><label class="efl">Email *</label><input class="efi" id="eo-email" placeholder="alex@example.com" oninput="eoUp()"/></div>
+            <div class="efg"><label class="efl">Phone</label><input class="efi" id="eo-phone" placeholder="+1 555-0100" oninput="eoUp()"/></div>
+          </div>
+          <div class="eg2">
+            <div class="efg"><label class="efl">Location</label><input class="efi" id="eo-loc" placeholder="New York, NY" oninput="eoUp()"/></div>
+            <div class="efg"><label class="efl">LinkedIn</label><input class="efi" id="eo-li" placeholder="linkedin.com/in/..." oninput="eoUp()"/></div>
+          </div>
+          <div class="eg2">
+            <div class="efg"><label class="efl">GitHub / Portfolio</label><input class="efi" id="eo-gh" placeholder="github.com/username" oninput="eoUp()"/></div>
+            <div class="efg"><label class="efl">Website</label><input class="efi" id="eo-web" placeholder="yoursite.com" oninput="eoUp()"/></div>
+          </div>
+        </div>
+        <div class="esc">
+          <div class="esc-t">Professional Summary</div>
+          <textarea class="eft" id="eo-sum" rows="5" placeholder="Results-driven engineer with 4+ years building scalable web apps. Proficient in React, Node.js, and AWS. Led teams to cut API latency by 40% and raise user retention by 25%." oninput="eoUp()"></textarea>
+          <button class="eb eb-outline eb-sm" style="margin-top:8px" onclick="eoSampleSum()">💡 Insert Sample</button>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div id="eop-experience" style="display:none">
+        <div class="esc">
+          <div class="esc-t">Work Experience</div>
+          <div id="eo-exp-list"></div>
+          <button class="eb eb-dashed" onclick="eoAddExp()">＋ Add Work Experience</button>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div id="eop-education" style="display:none">
+        <div class="esc">
+          <div class="esc-t">Education</div>
+          <div id="eo-edu-list"></div>
+          <button class="eb eb-dashed" onclick="eoAddEdu()">＋ Add Education</button>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div id="eop-skills" style="display:none">
+        <div class="esc">
+          <div class="esc-t">Technical Skills</div>
+          <div style="display:flex;gap:7px;margin-bottom:9px">
+            <input class="efi" id="eo-sk-inp" placeholder="Type skill, press Enter or comma" style="flex:1" onkeydown="if(event.key==='Enter'||event.key===','){event.preventDefault();eoAddSkill()}"/>
+            <button class="eb eb-purple eb-sm" onclick="eoAddSkill()">Add</button>
+          </div>
+          <div id="eo-sk-list" style="display:flex;flex-wrap:wrap;gap:5px;min-height:24px"></div>
+          <div class="eqc">
+            <span style="font-size:.65rem;color:#4b5563;align-self:center">Quick:</span>
+            <button class="eqchip" onclick="eoQAdd('JavaScript')">JavaScript</button>
+            <button class="eqchip" onclick="eoQAdd('Python')">Python</button>
+            <button class="eqchip" onclick="eoQAdd('React')">React</button>
+            <button class="eqchip" onclick="eoQAdd('Node.js')">Node.js</button>
+            <button class="eqchip" onclick="eoQAdd('AWS')">AWS</button>
+            <button class="eqchip" onclick="eoQAdd('Docker')">Docker</button>
+            <button class="eqchip" onclick="eoQAdd('SQL')">SQL</button>
+            <button class="eqchip" onclick="eoQAdd('TypeScript')">TypeScript</button>
+            <button class="eqchip" onclick="eoQAdd('Git')">Git</button>
+            <button class="eqchip" onclick="eoQAdd('CI/CD')">CI/CD</button>
+          </div>
+        </div>
+        <div class="esc">
+          <div class="esc-t">Soft Skills</div>
+          <div style="display:flex;gap:7px;margin-bottom:9px">
+            <input class="efi" id="eo-ss-inp" placeholder="Leadership, Communication…" style="flex:1" onkeydown="if(event.key==='Enter'||event.key===','){event.preventDefault();eoAddSoft()}"/>
+            <button class="eb eb-purple eb-sm" onclick="eoAddSoft()">Add</button>
+          </div>
+          <div id="eo-ss-list" style="display:flex;flex-wrap:wrap;gap:5px;min-height:24px"></div>
+        </div>
+        <div class="esc">
+          <div class="esc-t">Languages</div>
+          <div id="eo-lang-list"></div>
+          <button class="eb eb-dashed" onclick="eoAddLang()">＋ Add Language</button>
+        </div>
+      </div>
+
+      <!-- EXTRAS -->
+      <div id="eop-extras" style="display:none">
+        <div class="esc">
+          <div class="esc-t">Certifications</div>
+          <div id="eo-cert-list"></div>
+          <button class="eb eb-dashed" onclick="eoAddCert()">＋ Add Certification</button>
+        </div>
+        <div class="esc">
+          <div class="esc-t">Projects</div>
+          <div id="eo-proj-list"></div>
+          <button class="eb eb-dashed" onclick="eoAddProj()">＋ Add Project</button>
+        </div>
+        <div class="esc">
+          <div class="esc-t">Achievements / Awards</div>
+          <div id="eo-award-list"></div>
+          <button class="eb eb-dashed" onclick="eoAddAward()">＋ Add Achievement</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:7px;margin-top:8px">
+        <button class="eb eb-purple" onclick="eoDL()" style="flex:1;justify-content:center">⬇ Download PDF</button>
+      </div>
+      <p style="font-size:.65rem;color:#374151;text-align:center;margin-top:7px">🔒 Data stays in your browser — never uploaded</p>
+    </div>
+
+    <!-- RIGHT: PREVIEW -->
+    <div class="eo-preview-wrap">
+      <div class="eo-preview-hd">
+        <span style="font-size:.82rem;font-weight:700;color:#a78bfa">📄 Live Preview <span style="font-size:.67rem;color:#4b5563;font-weight:400">(ATS-safe — black &amp; white)</span></span>
+        <button class="eb eb-outline eb-sm" onclick="eoDL()">⬇ Export PDF</button>
+      </div>
+      <div class="eo-pbox">
+        <div id="eo-rp">
+          <div class="rph" id="eo-rp-ph">
+            <div style="font-size:2.2rem;margin-bottom:10px">📄</div>
+            <p style="font-weight:600;margin-bottom:3px">Preview appears here</p>
+            <p style="font-size:.8rem">Fill in the form on the left →</p>
+          </div>
+        </div>
+      </div>
+      <div class="eo-comp">
+        <span style="font-size:.72rem;font-weight:600;color:#9ca3af">Completeness</span>
+        <div class="eo-track"><div class="eo-fill" id="eo-comp-fill" style="width:0%"></div></div>
+        <span id="eo-comp-pct" style="font-size:.78rem;font-weight:700;color:#a78bfa;min-width:30px;text-align:right">0%</span>
+        <span id="eo-comp-hint" style="font-size:.66rem;color:#4b5563;margin-left:3px"></span>
+      </div>
+    </div>
+
+  </div><!-- /eo-body -->
+
+  <div style="position:fixed;bottom:12px;right:12px;z-index:9999;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);border-radius:7px;padding:4px 11px;font-size:.68rem;color:#a78bfa;pointer-events:none">
+    ⚡ Made by <strong>Sudharsun</strong>
+  </div>
+</div><!-- /editor-overlay -->
+
+
+<script>
+// Editor overlay JS — loaded inline at bottom of index.html
+(function(){
+var ES={name:'',title:'',email:'',phone:'',loc:'',li:'',gh:'',web:'',sum:'',skills:[],soft:[],exp:[],edu:[],cert:[],proj:[],award:[],lang:[]};
+var _eid=0;
+function uid(){return ++_eid;}
+
+// show/hide overlay
+window.showEditor=function(){document.getElementById('editor-overlay').classList.add('open');document.body.style.overflow='hidden';eoInitRender();};
+window.hideEditor=function(){document.getElementById('editor-overlay').classList.remove('open');document.body.style.overflow='';};
+
+function eoInitRender(){eoRenderExp();eoRenderEdu();eoRenderCert();eoRenderProj();eoRenderAward();eoRenderLang();eoRenderSkills();eoRenderSoft();eoUp();}
+
+// toast
+window.eoToast=function(msg,icon){
+  document.getElementById('eo-ti').textContent=(icon||'✅')+' ';
+  document.getElementById('eo-tm').textContent=msg;
+  var t=document.getElementById('eo-toast');
+  t.classList.add('on');
+  clearTimeout(window._eott);
+  window._eott=setTimeout(function(){t.classList.remove('on');},3000);
+};
+
+// tabs
+window.eoTab=function(name){
+  ['basics','experience','education','skills','extras'].forEach(function(t){
+    document.getElementById('eop-'+t).style.display=(t===name)?'block':'none';
+    document.getElementById('eot-'+t).classList.toggle('on',t===name);
+  });
+};
+
+// read form
+function eoRead(){
+  ES.name =eov('eo-name'); ES.title=eov('eo-title');
+  ES.email=eov('eo-email');ES.phone=eov('eo-phone');
+  ES.loc  =eov('eo-loc'); ES.li   =eov('eo-li');
+  ES.gh   =eov('eo-gh');  ES.web  =eov('eo-web');
+  ES.sum  =eov('eo-sum');
+}
+function eov(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function eosv(id,val){var e=document.getElementById(id);if(e)e.value=val;}
+function eoesc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// skills
+window.eoAddSkill=function(){
+  var inp=document.getElementById('eo-sk-inp');
+  var val=inp.value.trim().replace(/,+$/,'');
+  if(!val)return;
+  val.split(',').map(function(s){return s.trim();}).filter(Boolean).forEach(function(s){if(!ES.skills.includes(s))ES.skills.push(s);});
+  inp.value='';eoRenderSkills();eoUp();
+};
+window.eoRmSkill=function(i){ES.skills.splice(i,1);eoRenderSkills();eoUp();};
+window.eoQAdd=function(s){if(!ES.skills.includes(s)){ES.skills.push(s);eoRenderSkills();eoUp();}};
+function eoRenderSkills(){
+  document.getElementById('eo-sk-list').innerHTML=ES.skills.map(function(s,i){
+    return '<span class="etag">'+eoesc(s)+'<button onclick="eoRmSkill('+i+')">✕</button></span>';
+  }).join('');
+}
+
+window.eoAddSoft=function(){
+  var inp=document.getElementById('eo-ss-inp');
+  var val=inp.value.trim().replace(/,+$/,'');
+  if(!val)return;
+  val.split(',').map(function(s){return s.trim();}).filter(Boolean).forEach(function(s){if(!ES.soft.includes(s))ES.soft.push(s);});
+  inp.value='';eoRenderSoft();eoUp();
+};
+window.eoRmSoft=function(i){ES.soft.splice(i,1);eoRenderSoft();eoUp();};
+function eoRenderSoft(){
+  document.getElementById('eo-ss-list').innerHTML=ES.soft.map(function(s,i){
+    return '<span class="etag" style="background:#1e293b;border-color:#334155;color:#93c5fd">'+eoesc(s)+'<button onclick="eoRmSoft('+i+')">✕</button></span>';
+  }).join('');
+}
+
+// experience
+window.eoAddExp=function(d){
+  var e=d||{id:uid(),co:'',role:'',start:'',end:'',curr:false,desc:''};
+  ES.exp.push(e);eoRenderExp();eoUp();
+};
+window.eoRmExp=function(id){ES.exp=ES.exp.filter(function(e){return e.id!==id;});eoRenderExp();eoUp();};
+window.eoSetExp=function(id,f,val){var e=ES.exp.find(function(x){return x.id===id;});if(e){e[f]=val;eoUp();}};
+window.eoToggleCurr=function(id,chk){
+  var e=ES.exp.find(function(x){return x.id===id;});if(!e)return;
+  e.curr=chk;var el=document.getElementById('eo-xe-'+id);
+  if(el){el.disabled=chk;if(chk)el.value='';}eoUp();
+};
+function eoRenderExp(){
+  var el=document.getElementById('eo-exp-list');
+  if(!ES.exp.length){el.innerHTML='<p style="color:#4b5563;font-size:.78rem;text-align:center;padding:10px">No experience added yet.</p>';return;}
+  el.innerHTML=ES.exp.map(function(e,i){
+    return '<div class="eec">'+
+      '<div class="eec-h"><span class="eec-n">Experience '+(i+1)+'</span>'+
+      '<button class="eb eb-red eb-sm" onclick="eoRmExp('+e.id+')">Remove</button></div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Company</label><input class="efi" value="'+eoesc(e.co)+'" placeholder="Google" oninput="eoSetExp('+e.id+',\'co\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">Job Title</label><input class="efi" value="'+eoesc(e.role)+'" placeholder="Software Engineer" oninput="eoSetExp('+e.id+',\'role\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Start</label><input class="efi" value="'+eoesc(e.start)+'" placeholder="Jan 2022" oninput="eoSetExp('+e.id+',\'start\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">End</label><input class="efi" id="eo-xe-'+e.id+'" value="'+eoesc(e.curr?'':e.end)+'" placeholder="Dec 2023" '+(e.curr?'disabled':'')+' oninput="eoSetExp('+e.id+',\'end\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="efg" style="display:flex;align-items:center;gap:7px;margin-bottom:8px">'+
+        '<input type="checkbox" id="eo-xc-'+e.id+'" '+(e.curr?'checked':'')+' onchange="eoToggleCurr('+e.id+',this.checked)" style="accent-color:#7c3aed;width:13px;height:13px;cursor:pointer"/>'+
+        '<label for="eo-xc-'+e.id+'" style="font-size:.75rem;color:#9ca3af;cursor:pointer">Currently working here</label>'+
+      '</div>'+
+      '<div class="efg"><label class="efl">Achievements (use • bullets)</label>'+
+        '<textarea class="eft" rows="4" placeholder="• Led team of 5 to deliver feature X&#10;• Reduced API latency by 40% using Redis&#10;• Shipped 3 major features per quarter" oninput="eoSetExp('+e.id+',\'desc\',this.value)">'+eoesc(e.desc)+'</textarea></div>'+
+      '</div>';
+  }).join('');
+}
+
+// education
+window.eoAddEdu=function(d){
+  var e=d||{id:uid(),school:'',deg:'',field:'',start:'',end:'',gpa:''};
+  ES.edu.push(e);eoRenderEdu();eoUp();
+};
+window.eoRmEdu=function(id){ES.edu=ES.edu.filter(function(e){return e.id!==id;});eoRenderEdu();eoUp();};
+window.eoSetEdu=function(id,f,val){var e=ES.edu.find(function(x){return x.id===id;});if(e){e[f]=val;eoUp();}};
+function eoRenderEdu(){
+  var el=document.getElementById('eo-edu-list');
+  if(!ES.edu.length){el.innerHTML='<p style="color:#4b5563;font-size:.78rem;text-align:center;padding:10px">No education added yet.</p>';return;}
+  el.innerHTML=ES.edu.map(function(e,i){
+    return '<div class="eec">'+
+      '<div class="eec-h"><span class="eec-n">Education '+(i+1)+'</span>'+
+      '<button class="eb eb-red eb-sm" onclick="eoRmEdu('+e.id+')">Remove</button></div>'+
+      '<div class="efg"><label class="efl">School / University</label><input class="efi" value="'+eoesc(e.school)+'" placeholder="MIT" oninput="eoSetEdu('+e.id+',\'school\',this.value)"/></div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Degree</label><input class="efi" value="'+eoesc(e.deg)+'" placeholder="B.S." oninput="eoSetEdu('+e.id+',\'deg\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">Field of Study</label><input class="efi" value="'+eoesc(e.field)+'" placeholder="Computer Science" oninput="eoSetEdu('+e.id+',\'field\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Start</label><input class="efi" value="'+eoesc(e.start)+'" placeholder="2018" oninput="eoSetEdu('+e.id+',\'start\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">End</label><input class="efi" value="'+eoesc(e.end)+'" placeholder="2022" oninput="eoSetEdu('+e.id+',\'end\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="efg"><label class="efl">GPA (optional)</label><input class="efi" value="'+eoesc(e.gpa)+'" placeholder="3.8 / 4.0" oninput="eoSetEdu('+e.id+',\'gpa\',this.value)"/></div>'+
+      '</div>';
+  }).join('');
+}
+
+// certs
+window.eoAddCert=function(d){var c=d||{id:uid(),name:'',issuer:'',date:''};ES.cert.push(c);eoRenderCert();eoUp();};
+window.eoRmCert=function(id){ES.cert=ES.cert.filter(function(c){return c.id!==id;});eoRenderCert();eoUp();};
+window.eoSetCert=function(id,f,val){var c=ES.cert.find(function(x){return x.id===id;});if(c){c[f]=val;eoUp();}};
+function eoRenderCert(){
+  var el=document.getElementById('eo-cert-list');
+  if(!ES.cert.length){el.innerHTML='<p style="color:#4b5563;font-size:.78rem;text-align:center;padding:8px">No certifications added.</p>';return;}
+  el.innerHTML=ES.cert.map(function(c,i){
+    return '<div class="eec"><div class="eec-h"><span class="eec-n">Cert '+(i+1)+'</span>'+
+      '<button class="eb eb-red eb-sm" onclick="eoRmCert('+c.id+')">Remove</button></div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Name</label><input class="efi" value="'+eoesc(c.name)+'" placeholder="AWS Solutions Architect" oninput="eoSetCert('+c.id+',\'name\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">Issuer</label><input class="efi" value="'+eoesc(c.issuer)+'" placeholder="Amazon Web Services" oninput="eoSetCert('+c.id+',\'issuer\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="efg"><label class="efl">Date</label><input class="efi" value="'+eoesc(c.date)+'" placeholder="March 2024" oninput="eoSetCert('+c.id+',\'date\',this.value)"/></div></div>';
+  }).join('');
+}
+
+// projects
+window.eoAddProj=function(d){var p=d||{id:uid(),name:'',tech:'',url:'',desc:''};ES.proj.push(p);eoRenderProj();eoUp();};
+window.eoRmProj=function(id){ES.proj=ES.proj.filter(function(p){return p.id!==id;});eoRenderProj();eoUp();};
+window.eoSetProj=function(id,f,val){var p=ES.proj.find(function(x){return x.id===id;});if(p){p[f]=val;eoUp();}};
+function eoRenderProj(){
+  var el=document.getElementById('eo-proj-list');
+  if(!ES.proj.length){el.innerHTML='<p style="color:#4b5563;font-size:.78rem;text-align:center;padding:8px">No projects added.</p>';return;}
+  el.innerHTML=ES.proj.map(function(p,i){
+    return '<div class="eec"><div class="eec-h"><span class="eec-n">Project '+(i+1)+'</span>'+
+      '<button class="eb eb-red eb-sm" onclick="eoRmProj('+p.id+')">Remove</button></div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Name</label><input class="efi" value="'+eoesc(p.name)+'" placeholder="E-Commerce Platform" oninput="eoSetProj('+p.id+',\'name\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">Technologies</label><input class="efi" value="'+eoesc(p.tech)+'" placeholder="React, Node.js" oninput="eoSetProj('+p.id+',\'tech\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="efg"><label class="efl">URL / GitHub</label><input class="efi" value="'+eoesc(p.url)+'" placeholder="github.com/user/project" oninput="eoSetProj('+p.id+',\'url\',this.value)"/></div>'+
+      '<div class="efg"><label class="efl">Description</label><textarea class="eft" rows="3" placeholder="Built a platform handling 10K daily users…" oninput="eoSetProj('+p.id+',\'desc\',this.value)">'+eoesc(p.desc)+'</textarea></div></div>';
+  }).join('');
+}
+
+// awards
+window.eoAddAward=function(d){var a=d||{id:uid(),title:'',org:'',date:''};ES.award.push(a);eoRenderAward();eoUp();};
+window.eoRmAward=function(id){ES.award=ES.award.filter(function(a){return a.id!==id;});eoRenderAward();eoUp();};
+window.eoSetAward=function(id,f,val){var a=ES.award.find(function(x){return x.id===id;});if(a){a[f]=val;eoUp();}};
+function eoRenderAward(){
+  var el=document.getElementById('eo-award-list');
+  if(!ES.award.length){el.innerHTML='<p style="color:#4b5563;font-size:.78rem;text-align:center;padding:8px">No achievements added.</p>';return;}
+  el.innerHTML=ES.award.map(function(a,i){
+    return '<div class="eec"><div class="eec-h"><span class="eec-n">Achievement '+(i+1)+'</span>'+
+      '<button class="eb eb-red eb-sm" onclick="eoRmAward('+a.id+')">Remove</button></div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Title</label><input class="efi" value="'+eoesc(a.title)+'" placeholder="Employee of the Year" oninput="eoSetAward('+a.id+',\'title\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">Organization</label><input class="efi" value="'+eoesc(a.org)+'" placeholder="Google" oninput="eoSetAward('+a.id+',\'org\',this.value)"/></div>'+
+      '</div>'+
+      '<div class="efg"><label class="efl">Date</label><input class="efi" value="'+eoesc(a.date)+'" placeholder="2023" oninput="eoSetAward('+a.id+',\'date\',this.value)"/></div></div>';
+  }).join('');
+}
+
+// languages
+window.eoAddLang=function(d){var l=d||{id:uid(),lang:'',level:''};ES.lang.push(l);eoRenderLang();eoUp();};
+window.eoRmLang=function(id){ES.lang=ES.lang.filter(function(l){return l.id!==id;});eoRenderLang();eoUp();};
+window.eoSetLang=function(id,f,val){var l=ES.lang.find(function(x){return x.id===id;});if(l){l[f]=val;eoUp();}};
+function eoRenderLang(){
+  var el=document.getElementById('eo-lang-list');
+  if(!ES.lang.length){el.innerHTML='<p style="color:#4b5563;font-size:.78rem;text-align:center;padding:8px">No languages added.</p>';return;}
+  var opts=['Native','Fluent','Professional','Intermediate','Basic'];
+  el.innerHTML=ES.lang.map(function(l,i){
+    var optHTML=opts.map(function(o){return '<option value="'+o+'" '+(l.level===o?'selected':'')+'>'+o+'</option>';}).join('');
+    return '<div class="eec"><div class="eec-h"><span class="eec-n">Language '+(i+1)+'</span>'+
+      '<button class="eb eb-red eb-sm" onclick="eoRmLang('+l.id+')">Remove</button></div>'+
+      '<div class="eg2">'+
+        '<div class="efg"><label class="efl">Language</label><input class="efi" value="'+eoesc(l.lang)+'" placeholder="English" oninput="eoSetLang('+l.id+',\'lang\',this.value)"/></div>'+
+        '<div class="efg"><label class="efl">Proficiency</label>'+
+          '<select class="efs" onchange="eoSetLang('+l.id+',\'level\',this.value)">'+
+            '<option value="">— Select —</option>'+optHTML+
+          '</select></div>'+
+      '</div></div>';
+  }).join('');
+}
+
+// ── LIVE PREVIEW ──────────────────────────────────────────
+window.eoUp=function(){
+  eoRead();
+  var rp=document.getElementById('eo-rp');
+  var ph=document.getElementById('eo-rp-ph');
+  var hasAny=ES.name||ES.email||ES.title||ES.sum||ES.exp.length||ES.edu.length||ES.skills.length;
+  if(!hasAny){if(ph)ph.style.display='flex';eoComp();return;}
+  if(ph)ph.style.display='none';
+
+  var ct=[];
+  if(ES.email)ct.push(ES.email);if(ES.phone)ct.push(ES.phone);
+  if(ES.loc)ct.push(ES.loc);if(ES.li)ct.push(ES.li);
+  if(ES.gh)ct.push(ES.gh);if(ES.web)ct.push(ES.web);
+  var ctH=ct.map(function(c){return '<span>'+eoesc(c)+'</span>';}).join('');
+
+  var sumH=ES.sum?'<div class="rst">Professional Summary</div><hr/><p style="font-size:10pt;line-height:1.55;margin-bottom:5px">'+eoesc(ES.sum)+'</p>':'';
+
+  var expH='';
+  if(ES.exp.length){
+    expH='<div class="rst">Work Experience</div><hr/>';
+    ES.exp.forEach(function(e){
+      var dr=[e.start,e.curr?'Present':e.end].filter(Boolean).join(' – ');
+      expH+='<div class="re"><div class="rrow"><span class="rb">'+eoesc(e.role||'Job Title')+'</span><span class="rd">'+eoesc(dr)+'</span></div>'+
+            '<div class="rrow"><span class="rs">'+eoesc(e.co||'Company')+'</span></div>'+
+            (e.desc?'<div class="rdesc">'+eoesc(e.desc)+'</div>':'')+'</div>';
+    });
+  }
+
+  var eduH='';
+  if(ES.edu.length){
+    eduH='<div class="rst">Education</div><hr/>';
+    ES.edu.forEach(function(e){
+      var dg=[e.deg,e.field].filter(Boolean).join(' in ');
+      var yr=[e.start,e.end].filter(Boolean).join(' – ');
+      eduH+='<div class="re"><div class="rrow"><span class="rb">'+eoesc(e.school||'University')+'</span><span class="rd">'+eoesc(yr)+'</span></div>'+
+            (dg?'<div class="rs">'+eoesc(dg)+(e.gpa?' | GPA: '+eoesc(e.gpa):'')+'</div>':'')+'</div>';
+    });
+  }
+
+  var skH='';
+  var skParts=[];
+  if(ES.skills.length)skParts.push('<strong>Technical:</strong> '+ES.skills.map(eoesc).join(', '));
+  if(ES.soft.length)skParts.push('<strong>Soft Skills:</strong> '+ES.soft.map(eoesc).join(', '));
+  if(skParts.length)skH='<div class="rst">Skills</div><hr/><div class="rsk">'+skParts.join('<br/>')+'</div>';
+
+  var lgH='';
+  if(ES.lang.length){
+    var ls=ES.lang.filter(function(l){return l.lang;}).map(function(l){return l.lang+(l.level?' ('+l.level+')':'');}).join(', ');
+    lgH='<div class="rst">Languages</div><hr/><div class="rsk">'+eoesc(ls)+'</div>';
+  }
+
+  var ctH2='';
+  if(ES.cert.length){
+    ctH2='<div class="rst">Certifications</div><hr/>';
+    ES.cert.forEach(function(c){
+      ctH2+='<div class="re"><div class="rrow"><span class="rb">'+eoesc(c.name||'Certification')+'</span><span class="rd">'+eoesc(c.date)+'</span></div>'+(c.issuer?'<div class="rs">'+eoesc(c.issuer)+'</div>':'')+'</div>';
+    });
+  }
+
+  var prH='';
+  if(ES.proj.length){
+    prH='<div class="rst">Projects</div><hr/>';
+    ES.proj.forEach(function(p){
+      prH+='<div class="re"><div class="rrow"><span class="rb">'+eoesc(p.name||'Project')+'</span>'+(p.url?'<span class="rd">'+eoesc(p.url)+'</span>':'')+'</div>'+(p.tech?'<div class="rs">'+eoesc(p.tech)+'</div>':'')+(p.desc?'<div class="rdesc">'+eoesc(p.desc)+'</div>':'')+'</div>';
+    });
+  }
+
+  var awH='';
+  if(ES.award.length){
+    awH='<div class="rst">Achievements &amp; Awards</div><hr/>';
+    ES.award.forEach(function(a){
+      awH+='<div class="re"><div class="rrow"><span class="rb">'+eoesc(a.title||'Achievement')+'</span><span class="rd">'+eoesc(a.date)+'</span></div>'+(a.org?'<div class="rs">'+eoesc(a.org)+'</div>':'')+'</div>';
+    });
+  }
+
+  rp.innerHTML=
+    '<div class="rn">'+(ES.name?eoesc(ES.name):'Your Name')+'</div>'+
+    (ES.title?'<div class="rh">'+eoesc(ES.title)+'</div>':'')+
+    (ctH?'<div class="rc">'+ctH+'</div>':'')+
+    ((ES.name||ctH)?'<hr/>':'')+
+    sumH+expH+eduH+skH+lgH+ctH2+prH+awH;
+
+  eoComp();
+};
+
+function eoComp(){
+  var checks=[ES.name,ES.email,ES.title,ES.phone,ES.loc,ES.sum,ES.exp.length,ES.edu.length,ES.skills.length];
+  var done=checks.filter(Boolean).length;
+  var pct=Math.round(done/checks.length*100);
+  document.getElementById('eo-comp-fill').style.width=pct+'%';
+  document.getElementById('eo-comp-pct').textContent=pct+'%';
+  var hints=['Add your name','Add your email','Add a job title','Add phone','Add location','Write a summary','Add work experience','Add education','Add skills'];
+  var h='';for(var i=0;i<checks.length;i++){if(!checks[i]){h=hints[i];break;}}
+  document.getElementById('eo-comp-hint').textContent=h?'→ '+h:'✓ Ready to download!';
+}
+
+// ── PDF ──────────────────────────────────────────────────
+window.eoDL=function(){
+  var btn=document.getElementById('eo-dl-btn');
+  btn.textContent='⏳ Generating…';btn.disabled=true;
+  setTimeout(function(){
+    var el=document.getElementById('eo-rp');
+    var ph=document.getElementById('eo-rp-ph');
+    if(ph)ph.style.display='none';
+    html2canvas(el,{scale:2.5,useCORS:true,backgroundColor:'#ffffff',logging:false})
+    .then(function(canvas){
+      var jsPDF=window.jspdf.jsPDF;
+      var pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+      var W=pdf.internal.pageSize.getWidth(),H=pdf.internal.pageSize.getHeight();
+      var iW=canvas.width,iH=canvas.height;
+      var pageH=Math.floor((H/W)*iW);
+      var pages=Math.ceil(iH/pageH);
+      for(var pg=0;pg<pages;pg++){
+        var sh=Math.min(pageH,iH-pg*pageH);
+        var c2=document.createElement('canvas');
+        c2.width=iW;c2.height=sh;
+        c2.getContext('2d').drawImage(canvas,0,-pg*pageH);
+        var data=c2.toDataURL('image/png');
+        if(pg>0)pdf.addPage();
+        pdf.addImage(data,'PNG',0,0,W,(sh/iW)*W);
+      }
+      var fn=(ES.name||'resume').replace(/\s+/g,'_')+'_resume.pdf';
+      pdf.save(fn);
+      eoToast('PDF downloaded!','🎉');
+    })
+    .catch(function(err){console.error(err);eoToast('PDF failed. Try again.','❌');})
+    .finally(function(){btn.textContent='⬇ Download PDF';btn.disabled=false;});
+  },80);
+};
+
+// ── SAMPLE SUMMARY ──────────────────────────────────────
+window.eoSampleSum=function(){
+  eosv('eo-sum','Results-driven Software Engineer with 4+ years of experience building scalable web applications. Proficient in React, Node.js, and AWS cloud infrastructure. Proven track record of improving system performance by 40% and leading cross-functional teams to deliver projects on time and within budget.');
+  eoUp();
+};
+
+// ── RESET ───────────────────────────────────────────────
+window.eoReset=function(){
+  if(!confirm('Reset all data? This cannot be undone.'))return;
+  ES={name:'',title:'',email:'',phone:'',loc:'',li:'',gh:'',web:'',sum:'',skills:[],soft:[],exp:[],edu:[],cert:[],proj:[],award:[],lang:[]};
+  ['eo-name','eo-title','eo-email','eo-phone','eo-loc','eo-li','eo-gh','eo-web','eo-sum'].forEach(function(id){eosv(id,'');});
+  eoRenderSkills();eoRenderSoft();eoRenderExp();eoRenderEdu();
+  eoRenderCert();eoRenderProj();eoRenderAward();eoRenderLang();
+  var rp=document.getElementById('eo-rp');
+  rp.innerHTML='<div class="rph" id="eo-rp-ph" style="display:flex"><div style="font-size:2.2rem;margin-bottom:10px">📄</div><p style="font-weight:600;margin-bottom:3px">Preview appears here</p><p style="font-size:.8rem">Fill in the form on the left →</p></div>';
+  eoComp();eoToast('Reset complete','🔄');
+};
+
+// ── LOAD SAMPLE ─────────────────────────────────────────
+window.eoLoadSample=function(){
+  eosv('eo-name','Alex Johnson');
+  eosv('eo-title','Full-Stack Software Engineer');
+  eosv('eo-email','alex.johnson@email.com');
+  eosv('eo-phone','+1 (555) 012-3456');
+  eosv('eo-loc','San Francisco, CA');
+  eosv('eo-li','linkedin.com/in/alexjohnson');
+  eosv('eo-gh','github.com/alexjohnson');
+  eosv('eo-web','alexjohnson.dev');
+  eosv('eo-sum','Full-stack engineer with 5+ years building high-traffic web applications used by 2M+ users. Expert in React, Node.js, PostgreSQL, and AWS. Led teams of 6 to deliver products on schedule. Passionate about clean architecture and performance optimization.');
+  ES.skills=['JavaScript','TypeScript','React','Node.js','Python','AWS','Docker','PostgreSQL','Redis','GraphQL','Git','CI/CD'];
+  ES.soft=['Leadership','Communication','Problem Solving','Agile/Scrum','Mentoring'];
+  _eid=100;
+  ES.exp=[
+    {id:101,co:'Google',role:'Senior Software Engineer',start:'Jan 2022',end:'',curr:true,desc:'• Led development of real-time collaboration features used by 500K+ users\n• Reduced API response time by 45% via Redis caching and query optimization\n• Mentored 3 junior engineers and conducted weekly code reviews'},
+    {id:102,co:'Stripe',role:'Software Engineer',start:'Jun 2019',end:'Dec 2021',curr:false,desc:'• Built payment microservices handling $10M+ in daily transactions\n• Implemented A/B testing framework that raised conversion rates by 18%\n• Shipped 12 major features in collaboration with cross-functional teams'}
+  ];
+  ES.edu=[{id:201,school:'Stanford University',deg:'B.S.',field:'Computer Science',start:'2015',end:'2019',gpa:'3.9 / 4.0'}];
+  ES.cert=[{id:301,name:'AWS Solutions Architect – Professional',issuer:'Amazon Web Services',date:'Mar 2023'}];
+  ES.proj=[{id:401,name:'OpenChat',tech:'React, Node.js, WebSockets, Redis',url:'github.com/alexjohnson/openchat',desc:'Real-time chat platform with 10K+ monthly active users featuring end-to-end encryption and multi-room support.'}];
+  ES.lang=[{id:501,lang:'English',level:'Native'},{id:502,lang:'Spanish',level:'Intermediate'}];
+  eoRenderSkills();eoRenderSoft();eoRenderExp();eoRenderEdu();
+  eoRenderCert();eoRenderProj();eoRenderAward();eoRenderLang();
+  eoUp();eoToast('Sample loaded!','📋');
+};
+
+})(); // end IIFE
+
+</script>
+</body>
+</html>
