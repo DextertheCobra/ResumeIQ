@@ -4,8 +4,6 @@
 
 Built by **Sudharsun**
 
-🔗 **Live Demo → [sudharsun.github.io/ResumeIQ](https://sudharsun.github.io/ResumeIQ)**
-
 ---
 
 ## What is ResumeIQ AI?
